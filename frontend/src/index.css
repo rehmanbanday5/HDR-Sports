@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; }
+body { @apply bg-chalk text-ink font-body antialiased; }
+::selection { @apply bg-gold/40 text-ink; }
+*:focus-visible { outline: 2px solid #D4A73D; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.container-gully { @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10; }
+.btn-primary { @apply inline-flex items-center justify-center gap-2 bg-pitch text-chalk font-body font-semibold px-6 py-3 rounded-sm hover:bg-pitch-dark transition-colors duration-200; }
+.btn-secondary { @apply inline-flex items-center justify-center gap-2 bg-transparent border border-ink/20 text-ink font-body font-semibold px-6 py-3 rounded-sm hover:border-ink transition-colors duration-200; }
+.btn-accent { @apply inline-flex items-center justify-center gap-2 bg-leather text-chalk font-body font-semibold px-6 py-3 rounded-sm hover:bg-leather-dark transition-colors duration-200; }
+.eyebrow { @apply text-xs font-mono font-semibold tracking-[0.2em] uppercase text-willow-dark; }
+.section-heading { @apply font-display text-3xl sm:text-4xl font-semibold text-ink; }
+.skeleton { @apply animate-pulse bg-ink/10 rounded-sm; }
