@@ -26,7 +26,7 @@ const Login = () => {
   };
 
   return (
-    <div className="container-gully py-16 max-w-md">
+    <div className="container-HDR py-16 max-w-md">
       <h1 className="font-display text-3xl font-bold mb-2">Welcome back</h1>
       <p className="text-ink-soft mb-8">Log in to view your orders and saved addresses.</p>
 
@@ -39,7 +39,7 @@ const Login = () => {
           <label className="text-xs font-mono uppercase tracking-widest text-ink-soft mb-1.5 block">Password</label>
           <input required type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full border border-ink/20 rounded-sm px-4 py-2.5 text-sm" />
         </div>
-        <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-60">
+        <button type="submit" disabled={submitting} className="w-full bg-[#0D111A] text-white py-3 rounded-xl font-bold transition-all duration-300 hover:bg-[#D4AF37] hover:text-[#0D111A]">
           {submitting ? 'Logging in...' : 'Log In'}
         </button>
       </form>

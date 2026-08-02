@@ -15,7 +15,9 @@ body { @apply bg-chalk text-ink font-body antialiased; }
   }
 }
 
-.container-gully { @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10; }
+
+
+.container-HDR { @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10; }
 .btn-primary { @apply inline-flex items-center justify-center gap-2 bg-pitch text-chalk font-body font-semibold px-6 py-3 rounded-sm hover:bg-pitch-dark transition-colors duration-200; }
 .btn-secondary { @apply inline-flex items-center justify-center gap-2 bg-transparent border border-ink/20 text-ink font-body font-semibold px-6 py-3 rounded-sm hover:border-ink transition-colors duration-200; }
 .btn-accent { @apply inline-flex items-center justify-center gap-2 bg-leather text-chalk font-body font-semibold px-6 py-3 rounded-sm hover:bg-leather-dark transition-colors duration-200; }

@@ -1,4 +1,4 @@
-# GULLY Cricket — Frontend
+# HDR Cricket — Frontend
 
 React (Vite) + Tailwind CSS storefront and admin panel. See the root `README.md` (one level up) for full
 project setup instructions.

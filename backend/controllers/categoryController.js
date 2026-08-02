@@ -30,7 +30,7 @@ exports.createCategory = asyncHandler(async (req, res) => {
 
   if (req.file) {
     const b64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-    const result = await uploadToCloudinary(b64, 'gully/categories');
+    const result = await uploadToCloudinary(b64, 'HDR/categories');
     category.image = { url: result.secure_url, publicId: result.public_id };
   }
 
@@ -52,7 +52,7 @@ exports.updateCategory = asyncHandler(async (req, res) => {
   if (req.file) {
     if (category.image?.publicId) await deleteFromCloudinary(category.image.publicId);
     const b64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-    const result = await uploadToCloudinary(b64, 'gully/categories');
+    const result = await uploadToCloudinary(b64, 'HDR/categories');
     category.image = { url: result.secure_url, publicId: result.public_id };
   }
 

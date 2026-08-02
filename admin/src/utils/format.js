@@ -11,7 +11,7 @@ export const slugify = (str) =>
     .replace(/(^-|-$)/g, '');
 
 export const primaryImage = (product) =>
-  product?.images?.find((i) => i.isPrimary)?.url || product?.images?.[0]?.url || 'https://placehold.co/800x800/1B4332/F7F5F0?text=GULLY';
+  product?.images?.find((i) => i.isPrimary)?.url || product?.images?.[0]?.url || 'https://placehold.co/800x800/1B4332/F7F5F0?text=HDR';
 
 export const displayPrice = (product) => {
   if (product?.hasVariants && product.variants?.length) {

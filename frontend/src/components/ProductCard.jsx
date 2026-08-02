@@ -1,11 +1,20 @@
-import { Link } from 'react-router-dom';
-import { primaryImage, displayPrice, originalPrice, formatPrice } from '../utils/format';
-import StarRating from './StarRating';
+import { Link } from "react-router-dom";
+import { primaryImage, displayPrice, originalPrice } from "../utils/format";
+import StarRating from "./StarRating";
+import { useCurrency } from "../context/CurrencyContext";
 
 const ProductCard = ({ product }) => {
-  const price = displayPrice(product);
-  const original = originalPrice(product);
-  const outOfStock = (product.hasVariants ? product.variants?.every((v) => v.stock <= 0) : product.stock <= 0);
+  const { convertPrice, symbol, currency } = useCurrency();
+
+  const price = convertPrice(displayPrice(product));
+
+  const original = originalPrice(product)
+    ? convertPrice(originalPrice(product))
+    : null;
+
+  const outOfStock = product.hasVariants
+    ? product.variants?.every((v) => v.stock <= 0)
+    : product.stock <= 0;
 
   return (
     <Link
@@ -19,26 +28,51 @@ const ProductCard = ({ product }) => {
           loading="lazy"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
+
         {original && (
           <span className="absolute top-3 left-3 bg-leather text-chalk text-[10px] font-mono font-bold uppercase tracking-wide px-2 py-1 rounded-sm">
             Sale
           </span>
         )}
+
         {outOfStock && (
           <div className="absolute inset-0 bg-ink/50 flex items-center justify-center">
-            <span className="text-chalk text-xs font-mono uppercase tracking-widest">Out of Stock</span>
+            <span className="text-chalk text-xs font-mono uppercase tracking-widest">
+              Out of Stock
+            </span>
           </div>
         )}
       </div>
+
       <div className="p-4">
         {product.category?.name && (
-          <p className="text-[10px] font-mono uppercase tracking-widest text-willow-dark mb-1">{product.category.name}</p>
+          <p className="text-[10px] font-mono uppercase tracking-widest text-willow-dark mb-1">
+            {product.category.name}
+          </p>
         )}
-        <h3 className="font-display font-semibold text-ink leading-snug mb-1.5 line-clamp-2">{product.name}</h3>
-        {product.ratingCount > 0 && <StarRating rating={product.ratingAverage} count={product.ratingCount} />}
+
+        <h3 className="font-display font-semibold text-ink leading-snug mb-1.5 line-clamp-2">
+          {product.name}
+        </h3>
+
+        {product.ratingCount > 0 && (
+          <StarRating
+            rating={product.ratingAverage}
+            count={product.ratingCount}
+          />
+        )}
+
         <div className="mt-2 flex items-baseline gap-2">
-          <span className="font-semibold text-ink">{formatPrice(price)}</span>
-          {original && <span className="text-sm text-ink-soft line-through">{formatPrice(original)}</span>}
+          <span className="font-semibold text-ink">
+            {symbol} {currency === "PKR" ? Math.round(price) : price.toFixed(2)}
+          </span>
+
+          {original && (
+            <span className="text-sm text-ink-soft line-through">
+              {symbol}{" "}
+              {currency === "PKR" ? Math.round(original) : original.toFixed(2)}
+            </span>
+          )}
         </div>
       </div>
     </Link>

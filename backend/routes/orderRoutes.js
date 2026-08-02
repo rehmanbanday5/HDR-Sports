@@ -8,6 +8,8 @@ router.post('/shipping-options', ctrl.getShippingOptions);
 router.post('/', optionalAuth, orderRules, validate, ctrl.createOrder);
 router.get('/lookup', ctrl.lookupOrder);
 
+router.get("/my-orders", protect, ctrl.getMyOrders);
+
 router.get('/', protect, restrictTo('admin'), ctrl.getAllOrders);
 router.get('/:id', protect, restrictTo('admin'), ctrl.getOrderById);
 router.put('/:id/status', protect, restrictTo('admin'), ctrl.updateOrderStatus);

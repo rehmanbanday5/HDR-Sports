@@ -19,10 +19,11 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
-  })
+  }),
 );
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
@@ -41,7 +42,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Routes
-app.get('/api/health', (req, res) => res.status(200).json({ success: true, message: 'GULLY API is running', env: process.env.NODE_ENV }));
+app.get('/api/health', (req, res) => res.status(200).json({ success: true, message: 'HDR API is running', env: process.env.NODE_ENV }));
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
@@ -55,6 +56,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`[server] GULLY API listening on port ${PORT} (${process.env.NODE_ENV || 'development'})`));
+app.listen(PORT, () => console.log(`[server] HDR API listening on port ${PORT} (${process.env.NODE_ENV || 'development'})`));
 
 module.exports = app;

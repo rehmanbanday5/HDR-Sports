@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const loadUser = useCallback(async () => {
-    const token = localStorage.getItem('gully_token');
+    const token = localStorage.getItem('HDR_token');
     if (!token) {
       setLoading(false);
       return;
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
       const { data } = await api.get('/auth/me');
       setUser(data.user);
     } catch {
-      localStorage.removeItem('gully_token');
+      localStorage.removeItem('HDR_token');
       setUser(null);
     } finally {
       setLoading(false);
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('gully_token', data.token);
+    localStorage.setItem('HDR_token', data.token);
     setUser(data.user);
     try {
       await api.post('/cart/merge');
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (payload) => {
     const { data } = await api.post('/auth/register', payload);
-    localStorage.setItem('gully_token', data.token);
+    localStorage.setItem('HDR_token', data.token);
     setUser(data.user);
     return data.user;
   };
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     } catch {
       /* ignore */
     }
-    localStorage.removeItem('gully_token');
+    localStorage.removeItem('HDR_token');
     setUser(null);
   };
 

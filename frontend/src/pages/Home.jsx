@@ -5,6 +5,18 @@ import api from '../api/client';
 import ProductCard from '../components/ProductCard';
 import ProductGridSkeleton from '../components/ProductGridSkeleton';
 import { slugify } from '../utils/format';
+import Banner1 from "../assets/Banner1.png";
+import Banner2 from "../assets/Banner2.png";
+import Banner3 from "../assets/Banner3.png";
+import StoreLocation from "../assets/StoreLocation.jpeg"
+
+const HERO_BANNERS = [Banner1, Banner2, Banner3];
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/effect-fade";
 
 const CATEGORY_TILES = [
   { name: 'Cricket Bats', img: 'https://placehold.co/600x750/1B4332/F7F5F0?text=Bats' },
@@ -23,7 +35,7 @@ const TRUST_POINTS = [
 ];
 
 const Section = ({ eyebrow, title, viewAllHref, children }) => (
-  <section className="container-gully py-14">
+  <section className="container-HDR py-14">
     <div className="flex items-end justify-between mb-7">
       <div>
         {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
@@ -53,34 +65,51 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative bg-pitch text-chalk overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_20%,white,transparent_35%),radial-gradient(circle_at_80%_60%,white,transparent_30%)]" />
-        <div className="container-gully relative py-20 lg:py-28 grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <p className="eyebrow !text-willow mb-4">Straight from the gully to the crease</p>
+      <section className="relative h-[85vh] min-h-[650px] overflow-hidden text-white">
+        <Swiper
+          modules={[Autoplay, EffectFade]}
+          effect="fade"
+          loop={true}
+          autoplay={{
+            delay: 1500,
+            disableOnInteraction: false,
+          }}
+          speed={700}
+          className="absolute inset-0 h-full w-full"
+        >
+          {HERO_BANNERS.map((banner, index) => (
+            <SwiperSlide key={index}>
+              <img
+                src={banner}
+                alt={`Banner ${index + 1}`}
+                className="h-full w-full object-cover"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        <div className="absolute inset-0 z-[1]"></div>
+        <div className="container-HDR relative z-10 h-full grid lg:grid-cols-2 gap-12 items-center">
+          <div className="max-w-lg">
+            <p className="eyebrow !text-[#D4AF37] mb-4">
+              We're Shipping Globally
+            </p>
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-6">
-              Gear that plays as hard as you do.
+              Producer Of All Quality Cricket Gears
             </h1>
             <p className="text-chalk/75 text-lg leading-relaxed mb-8 max-w-lg">
-              Premium bats, protective wear, and match essentials — engineered for players from street cricket
-              to the professional circuit. Based in Pakistan, shipped worldwide.
+              From premium cricket bats to professional protective gear, we
+              create quality cricket essentials built for every player — from
+              street cricket enthusiasts to professionals. Proudly made in
+              Pakistan and delivered worldwide.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link to="/shop" className="btn-accent">
+              <Link
+                to="/shop"
+                className="inline-flex items-center gap-2  text-white px-7 py-3 rounded-xl font-bold border border-[#D4AF37] transition-all duration-300 hover:bg-[#D4AF37]"
+              >
                 Shop All Gear <ArrowRight size={18} />
               </Link>
-              <Link to={`/shop?categorySlug=${slugify('Cricket Bats')}`} className="inline-flex items-center justify-center gap-2 border border-chalk/40 text-chalk font-semibold px-6 py-3 rounded-sm hover:bg-chalk/10 transition-colors">
-                Explore Bats
-              </Link>
-            </div>
-          </div>
-          <div className="relative hidden lg:block">
-            <div className="aspect-[4/5] bg-willow/20 border border-chalk/20 rounded-sm flex items-center justify-center">
-              <img
-                src="https://placehold.co/700x875/C9A574/161616?text=GULLY+CRICKET"
-                alt="Cricket player with GULLY equipment"
-                className="w-full h-full object-cover rounded-sm"
-              />
             </div>
           </div>
         </div>
@@ -88,82 +117,151 @@ const Home = () => {
 
       {/* Trust points */}
       <section className="border-b border-ink/10">
-        <div className="container-gully grid grid-cols-2 lg:grid-cols-4 gap-6 py-10">
+        <div className="container-HDR grid grid-cols-2 lg:grid-cols-4 gap-6 py-10">
           {TRUST_POINTS.map(({ icon: Icon, title, desc }) => (
             <div key={title} className="flex items-start gap-3">
-              <Icon size={22} className="text-pitch shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-sm">{title}</p>
-                <p className="text-xs text-ink-soft mt-0.5">{desc}</p>
+              <Icon size={22} className="text-pitch shrink-0 mt-1" />
+
+              <div className="min-w-0">
+                <p className="font-semibold text-sm leading-tight">{title}</p>
+
+                <p className="text-xs text-ink-soft mt-1 leading-relaxed max-w-[180px]">
+                  {desc}
+                </p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Category tiles */}
-      <section className="container-gully py-14">
-        <p className="eyebrow mb-2">Shop by category</p>
-        <h2 className="section-heading mb-7">Everything for match day</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {CATEGORY_TILES.map((c) => (
-            <Link
-              key={c.name}
-              to={`/shop?categorySlug=${slugify(c.name)}`}
-              className="group relative aspect-[4/5] overflow-hidden rounded-sm"
-            >
-              <img src={c.img} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
-              <span className="absolute bottom-3 left-3 text-chalk font-display font-semibold text-sm">{c.name}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* Featured */}
-      <Section eyebrow="Handpicked" title="Featured Products" viewAllHref="/shop?featured=true">
-        {featured === null ? <ProductGridSkeleton /> : featured.length === 0 ? (
-          <p className="text-ink-soft text-sm">No featured products yet — check back soon.</p>
+      <Section
+        eyebrow="Our Picks"
+        title="Featured Products"
+        viewAllHref="/shop?featured=true"
+      >
+        {featured === null ? (
+          <ProductGridSkeleton />
+        ) : featured.length === 0 ? (
+          <p className="text-ink-soft text-sm">
+            No featured products yet — check back soon.
+          </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {featured.map((p) => <ProductCard key={p._id} product={p} />)}
-          </div>
-        )}
-      </Section>
-
-      {/* New Arrivals */}
-      <Section eyebrow="Just landed" title="New Arrivals" viewAllHref="/shop?newArrival=true">
-        {newArrivals === null ? <ProductGridSkeleton count={4} /> : newArrivals.length === 0 ? (
-          <p className="text-ink-soft text-sm">No new arrivals yet.</p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {newArrivals.map((p) => <ProductCard key={p._id} product={p} />)}
+            {featured.map((p) => (
+              <ProductCard key={p._id} product={p} />
+            ))}
           </div>
         )}
       </Section>
 
       {/* Best Sellers */}
-      <Section eyebrow="Fan favourites" title="Best Sellers" viewAllHref="/shop?bestSeller=true">
-        {bestSellers === null ? <ProductGridSkeleton count={4} /> : bestSellers.length === 0 ? (
+      <Section
+        eyebrow="Fan favourites"
+        title="Best Sellers"
+        viewAllHref="/shop?bestSeller=true"
+      >
+        {bestSellers === null ? (
+          <ProductGridSkeleton count={4} />
+        ) : bestSellers.length === 0 ? (
           <p className="text-ink-soft text-sm">No best sellers yet.</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {bestSellers.map((p) => <ProductCard key={p._id} product={p} />)}
+            {bestSellers.map((p) => (
+              <ProductCard key={p._id} product={p} />
+            ))}
           </div>
         )}
       </Section>
 
-      {/* Promo banner */}
-      <section className="container-gully pb-20">
-        <div className="bg-leather text-chalk rounded-sm px-8 py-12 sm:py-16 text-center">
-          <p className="eyebrow !text-chalk/70 mb-3">Limited time</p>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4">Season Kit Sale — Up to 25% Off</h2>
-          <p className="text-chalk/85 max-w-md mx-auto mb-7">
-            Gear up for the new season with savings across bats, pads, and protective equipment.
+      {/* Why Choose HDR Sports */}
+      <section className="bg-[#080B12] text-white mb-20">
+        <div className="container-HDR py-16">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <p className="eyebrow !text-[#D4AF37] mb-3">Why Choose Us</p>
+
+            <h2 className="font-display text-3xl sm:text-4xl font-bold">
+              Why Choose HDR Sports?
+            </h2>
+
+            <p className="text-white/70 mt-4 leading-relaxed">
+              We provide premium quality cricket equipment built for players who
+              demand performance, reliability, and confidence on every pitch.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="border border-white/10 rounded-xl p-6 hover:border-[#D4AF37] transition">
+              <h3 className="font-bold text-lg mb-2">Premium Quality Gear</h3>
+
+              <p className="text-white/60 text-sm leading-relaxed">
+                Carefully selected cricket equipment designed for beginners,
+                club players, and professionals.
+              </p>
+            </div>
+
+            <div className="border border-white/10 rounded-xl p-6 hover:border-[#D4AF37] transition">
+              <h3 className="font-bold text-lg mb-2">
+                Authentic Cricket Products
+              </h3>
+
+              <p className="text-white/60 text-sm leading-relaxed">
+                Genuine bats, protective gear, and accessories trusted by
+                cricket enthusiasts.
+              </p>
+            </div>
+
+            <div className="border border-white/10 rounded-xl p-6 hover:border-[#D4AF37] transition">
+              <h3 className="font-bold text-lg mb-2">Global Delivery</h3>
+
+              <p className="text-white/60 text-sm leading-relaxed">
+                Delivering premium cricket gear across Pakistan and around the
+                world with safe and reliable shipping.
+              </p>
+            </div>
+
+            <div className="border border-white/10 rounded-xl p-6 hover:border-[#D4AF37] transition">
+              <h3 className="font-bold text-lg mb-2">Player First Approach</h3>
+
+              <p className="text-white/60 text-sm leading-relaxed">
+                Gear selected to help every player perform better and enjoy the
+                game.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Visit Our Store */}
+      <section className="container-HDR pb-20">
+        {/* Heading Above Image */}
+        <div className="text-center max-w-2xl mx-auto mb-8">
+          <p className="eyebrow !text-[#D4AF37] mb-3">Visit Our Store</p>
+
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#080B12]">
+            Find HDR Sports On Map
+          </h2>
+
+          <p className="text-ink-soft mt-4 leading-relaxed">
+            Visit our store and explore premium cricket gear in person. Click
+            below to open our exact location on Google Maps.
           </p>
-          <Link to="/shop" className="inline-flex items-center gap-2 bg-chalk text-ink font-semibold px-7 py-3 rounded-sm hover:bg-chalk/90 transition-colors">
-            Shop the Sale <ArrowRight size={18} />
-          </Link>
+        </div>
+
+        {/* Image Card */}
+        <div className="relative overflow-hidden rounded-xl group">
+          <a
+            href="https://www.google.com/maps/place/HDR+SPORTS/@33.6362121,73.0531171,17z/data=!3m1!4b1!4m6!3m5!1s0x38df956d2c5ef743:0xcea610325bf2d8dc!8m2!3d33.6362121!4d73.0531171!16s%2Fg%2F11srgjk2gl?entry=ttu&g_ep=EgoyMDI2MDcyOC4wIKXMDSoASAFQAw%3D%3D"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <img
+              src={StoreLocation}
+              alt="HDR Sports Store Location"
+              className="block w-full h-[350px] sm:h-[450px] object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </a>
         </div>
       </section>
     </div>

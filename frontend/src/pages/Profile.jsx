@@ -67,7 +67,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="container-gully py-10 max-w-2xl">
+    <div className="container-HDR py-10 max-w-2xl">
       <h1 className="font-display text-3xl font-bold mb-8">My Profile</h1>
 
       <section className="bg-white border border-ink/10 rounded-sm p-6 mb-8">

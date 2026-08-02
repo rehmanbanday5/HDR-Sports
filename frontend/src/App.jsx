@@ -16,6 +16,8 @@ import Profile from './pages/Profile';
 import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
 import NotFound from './pages/NotFound';
+import ScrollToTop from "./components/ScrollToTop";
+import ShippingReturns from "./pages/ShippingReturns";
 
 
 
@@ -27,7 +29,10 @@ function App() {
         path="/*"
         element={
           <div className="min-h-screen flex flex-col">
+            <ScrollToTop />
+
             <Navbar />
+
             <main className="flex-1">
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -42,9 +47,11 @@ function App() {
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
                 <Route path="/orders/:id" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
+                <Route path="/shipping-returns" element={<ShippingReturns />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
+
             <Footer />
           </div>
         }

@@ -30,9 +30,9 @@ const Register = () => {
   };
 
   return (
-    <div className="container-gully py-16 max-w-md">
+    <div className="container-HDR py-16 max-w-md">
       <h1 className="font-display text-3xl font-bold mb-2">Create your account</h1>
-      <p className="text-ink-soft mb-8">Save addresses and track orders across visits.</p>
+      <p className="text-ink-soft mb-8">Save addresses and orders across visits.</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -52,7 +52,7 @@ const Register = () => {
           <input required type="password" name="password" value={form.password} onChange={handleChange} minLength={8} className="w-full border border-ink/20 rounded-sm px-4 py-2.5 text-sm" />
           <p className="text-xs text-ink-soft mt-1">At least 8 characters.</p>
         </div>
-        <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-60">
+        <button type="submit" disabled={submitting} className="w-full bg-[#0D111A] text-white py-3 rounded-xl font-bold transition-all duration-300 hover:bg-[#D4AF37] hover:text-[#0D111A]">
           {submitting ? 'Creating account...' : 'Create Account'}
         </button>
       </form>

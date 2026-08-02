@@ -11,11 +11,16 @@ cloudinary.config({
  * @param {string} fileStr - base64 data URI (from multer memory storage)
  * @param {string} folder - cloudinary subfolder, e.g. 'products'
  */
-const uploadToCloudinary = (fileStr, folder = 'gully/products') => {
+
+const uploadToCloudinary = (fileStr, folder = "HDR Sports/products") => {
   return cloudinary.uploader.upload(fileStr, {
     folder,
-    resource_type: 'image',
-    transformation: [{ width: 1600, crop: 'limit' }, { quality: 'auto' }, { fetch_format: 'auto' }],
+    resource_type: "image",
+    transformation: [
+      { width: 1600, crop: "limit" },
+      { quality: "auto" },
+      { fetch_format: "auto" },
+    ],
   });
 };
 

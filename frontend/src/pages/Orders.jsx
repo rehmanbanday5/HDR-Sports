@@ -23,7 +23,7 @@ const Orders = () => {
 
   if (orders === null) {
     return (
-      <div className="container-gully py-10">
+      <div className="container-HDR py-10">
         <div className="skeleton h-8 w-48 mb-8" />
         {[1, 2, 3].map((i) => <div key={i} className="skeleton h-20 w-full mb-3" />)}
       </div>
@@ -32,14 +32,14 @@ const Orders = () => {
 
   if (orders.length === 0) {
     return (
-      <div className="container-gully">
+      <div className="container-HDR">
         <EmptyState icon={PackageSearch} title="No orders yet" message="Your order history will appear here." action={<Link to="/shop" className="btn-primary">Start Shopping</Link>} />
       </div>
     );
   }
 
   return (
-    <div className="container-gully py-10">
+    <div className="container-HDR py-10">
       <h1 className="font-display text-3xl font-bold mb-8">Order History</h1>
       <div className="divide-y divide-ink/10 border-y border-ink/10">
         {orders.map((o) => (

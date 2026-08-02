@@ -12,10 +12,10 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
 
-  let guestId = localStorage.getItem('gully_guest_id');
+  let guestId = localStorage.getItem('HDR_guest_id');
   if (!guestId) {
     guestId = `guest_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-    localStorage.setItem('gully_guest_id', guestId);
+    localStorage.setItem('HDR_guest_id', guestId);
   }
   config.headers['x-guest-id'] = guestId;
 

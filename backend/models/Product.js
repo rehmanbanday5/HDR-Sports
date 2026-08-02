@@ -35,10 +35,19 @@ const reviewSchema = new mongoose.Schema(
 
 const productSchema = new mongoose.Schema(
   {
-    name: { type: String, required: [true, 'Product name is required'], trim: true, maxlength: 150 },
+    name: {
+      type: String,
+      required: [true, "Product name is required"],
+      trim: true,
+      maxlength: 150,
+    },
     slug: { type: String, unique: true, index: true },
-    brand: { type: String, default: 'GULLY', trim: true },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    brand: { type: String, default: "HDR", trim: true },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
     subCategory: { type: String, trim: true }, // e.g. "English Willow Bats"
     description: { type: String, required: true },
     shortDescription: { type: String, maxlength: 300 },
@@ -51,7 +60,7 @@ const productSchema = new mongoose.Schema(
     hasVariants: { type: Boolean, default: false },
     variants: [variantSchema],
     // simple stock/sku used when hasVariants is false
-    sku: { type: String, unique: true, sparse: true },
+    sku: { type: String, sparse: true },
     stock: { type: Number, default: 0, min: 0 },
 
     images: [imageSchema],
@@ -72,12 +81,12 @@ const productSchema = new mongoose.Schema(
     salesCount: { type: Number, default: 0 }, // incremented on delivered orders
     viewCount: { type: Number, default: 0 },
 
-    relatedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    relatedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 
     metaTitle: { type: String },
     metaDescription: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 productSchema.set('toJSON', { flattenMaps: true });

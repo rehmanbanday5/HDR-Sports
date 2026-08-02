@@ -4,7 +4,22 @@ const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Cart = require('../models/Cart');
 const { generateOrderNumber, findShippingOption } = require('../utils/orderHelpers');
-const { sendOrderConfirmationEmail, sendAdminNewOrderEmail, sendOrderStatusUpdateEmail } = require('../utils/email');
+const {
+  sendAdminNewOrderEmail,
+  sendOrderStatusUpdateEmail,
+} = require("../utils/email");
+
+// @desc    Get logged-in user's orders
+// @route   GET /api/orders/my-orders
+exports.getMyOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user.id })
+    .sort('-createdAt');
+
+  res.status(200).json({
+    success: true,
+    orders,
+  });
+});
 
 // @desc    Get available shipping options for an address
 // @route   POST /api/orders/shipping-options
@@ -41,18 +56,25 @@ exports.createOrder = asyncHandler(async (req, res) => {
     let subtotal = 0;
 
     for (const reqItem of items) {
-      const product = await Product.findById(reqItem.productId).session(session);
+      const product = await Product.findById(reqItem.productId).session(
+        session,
+      );
       if (!product || !product.isActive) {
-        throw new Error(`Product not found or unavailable: ${reqItem.productId}`);
+        throw new Error(
+          `Product not found or unavailable: ${reqItem.productId}`,
+        );
       }
 
       let unitPrice, availableStock, attributes, sku;
 
       if (product.hasVariants && reqItem.variantId) {
         const variant = product.variants.id(reqItem.variantId);
-        if (!variant) throw new Error(`Variant not found for product ${product.name}`);
+        if (!variant)
+          throw new Error(`Variant not found for product ${product.name}`);
         if (variant.stock < reqItem.quantity) {
-          throw new Error(`Insufficient stock for ${product.name} (${Object.values(variant.attributes || {}).join(', ')})`);
+          throw new Error(
+            `Insufficient stock for ${product.name} (${Object.values(variant.attributes || {}).join(", ")})`,
+          );
         }
         variant.stock -= reqItem.quantity;
         unitPrice = variant.salePrice || variant.price;
@@ -77,7 +99,9 @@ exports.createOrder = asyncHandler(async (req, res) => {
         product: product._id,
         variantId: reqItem.variantId || null,
         name: product.name,
-        image: product.images.find((i) => i.isPrimary)?.url || product.images[0]?.url,
+        image:
+          product.images.find((i) => i.isPrimary)?.url ||
+          product.images[0]?.url,
         attributes,
         sku,
         unitPrice,
@@ -86,7 +110,11 @@ exports.createOrder = asyncHandler(async (req, res) => {
       });
     }
 
-    const shippingOption = findShippingOption(isInternational, shippingMethodId, subtotal);
+    const shippingOption = findShippingOption(
+      isInternational,
+      shippingMethodId,
+      subtotal,
+    );
     const total = subtotal + shippingOption.cost;
 
     const orderNumber = await generateOrderNumber();
@@ -98,11 +126,22 @@ exports.createOrder = asyncHandler(async (req, res) => {
       customer,
       shippingAddress: { ...shippingAddress, isInternational },
       orderNotes,
-      shippingMethod: { name: shippingOption.name, cost: shippingOption.cost, estimatedDays: shippingOption.estimatedDays },
-      pricing: { subtotal, shippingCost: shippingOption.cost, discount: 0, tax: 0, total, currency: 'PKR' },
+      shippingMethod: {
+        name: shippingOption.name,
+        cost: shippingOption.cost,
+        estimatedDays: shippingOption.estimatedDays,
+      },
+      pricing: {
+        subtotal,
+        shippingCost: shippingOption.cost,
+        discount: 0,
+        tax: 0,
+        total,
+        currency: "PKR",
+      },
       paymentMethod,
-      paymentStatus: paymentMethod === 'cod' ? 'unpaid' : 'pending',
-      status: 'pending',
+      paymentStatus: paymentMethod === "cod" ? "unpaid" : "pending",
+      status: "pending",
       isInternationalOrder: isInternational,
     });
 
@@ -111,17 +150,33 @@ exports.createOrder = asyncHandler(async (req, res) => {
     session.endSession();
 
     // Clear cart (best effort, outside transaction)
-    const cartFilter = req.user ? { user: req.user.id } : req.headers['x-guest-id'] ? { guestId: req.headers['x-guest-id'] } : null;
+    const cartFilter = req.user
+      ? { user: req.user.id }
+      : req.headers["x-guest-id"]
+        ? { guestId: req.headers["x-guest-id"] }
+        : null;
     if (cartFilter) await Cart.findOneAndUpdate(cartFilter, { items: [] });
 
     // Fire-and-forget notification emails — do not block the response on email delivery
-    sendOrderConfirmationEmail(order).catch((e) => console.error('[email] confirmation failed:', e.message));
-    sendAdminNewOrderEmail(order).catch((e) => console.error('[email] admin notify failed:', e.message));
+   
+    // sendAdminNewOrderEmail(order).catch((e) =>
+    //   console.error("[email] admin notify failed:", e.message),
+    // );
 
+
+    sendAdminNewOrderEmail(order)
+      .then(() => console.log("EMAIL SENT SUCCESS"))
+      .catch((e) => console.error("EMAIL ERROR:", e));
+
+      
     res.status(201).json({ success: true, order });
   } catch (err) {
-    await session.abortTransaction();
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
+
     session.endSession();
+
     res.status(400);
     throw err;
   }

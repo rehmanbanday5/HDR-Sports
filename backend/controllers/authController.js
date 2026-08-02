@@ -3,6 +3,8 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const { sendTokenResponse } = require('../utils/generateToken');
 
+
+
 // @desc    Register new customer
 // @route   POST /api/auth/register
 exports.register = asyncHandler(async (req, res) => {
@@ -108,5 +110,37 @@ exports.resetPassword = asyncHandler(async (req, res) => {
   user.passwordResetExpires = undefined;
   await user.save();
 
+  
+
   sendTokenResponse(user, 200, res);
+
+  
+});
+
+// Update Profile
+exports.updateProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  const { name, email, phone } = req.body;
+
+  if (email && email !== user.email) {
+    const exists = await User.findOne({ email });
+
+    if (exists) {
+      res.status(400);
+      throw new Error("Email already exists");
+    }
+
+    user.email = email;
+  }
+
+  if (name) user.name = name;
+  if (phone) user.phone = phone;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    user
+  });
 });
