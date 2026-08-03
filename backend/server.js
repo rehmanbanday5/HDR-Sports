@@ -58,11 +58,13 @@ app.use(errorHandler);
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
 
-  app.listen(PORT, () =>
-    console.log(
-      `[server] HDR API listening on port ${PORT} (${process.env.NODE_ENV})`,
-    ),
-  );
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`[server] HDR API listening on port ${PORT}`);
+  });
 }
 
 module.exports = app;
+
+}
+
