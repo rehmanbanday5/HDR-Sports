@@ -5,11 +5,12 @@ const notFound = (req, res, next) => {
 
 // eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, next) => {
-  let statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
-  let message = err.message || 'Internal server error';
+  let statusCode =
+    res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+  let message = err.message || "Internal server error";
 
   // Mongoose bad ObjectId
-  if (err.name === 'CastError') {
+  if (err.name === "CastError") {
     statusCode = 404;
     message = `Resource not found`;
   }
@@ -22,32 +23,33 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Mongoose validation error
-  if (err.name === 'ValidationError') {
+  if (err.name === "ValidationError") {
     statusCode = 400;
     message = Object.values(err.errors)
       .map((e) => e.message)
-      .join(', ');
+      .join(", ");
   }
 
   if (
-    err.name === 'MongoServerSelectionError' ||
-    err.name === 'MongooseServerSelectionError' ||
-    err.name === 'MongoNetworkError' ||
-    err.name === 'MongoError'
+    err.name === "MongoServerSelectionError" ||
+    err.name === "MongooseServerSelectionError" ||
+    err.name === "MongoNetworkError" ||
+    err.name === "MongoError"
   ) {
     statusCode = 503;
-    message = 'Database is currently unavailable. Please check MongoDB Atlas access settings.';
+    message =
+      "Database is currently unavailable. Please check MongoDB Atlas access settings.";
   }
 
-  if (err.name === 'JsonWebTokenError') {
+  if (err.name === "JsonWebTokenError") {
     statusCode = 401;
-    message = 'Invalid token';
+    message = "Invalid token";
   }
 
   res.status(statusCode).json({
     success: false,
     message,
-    stack: process.env.NODE_ENV === 'production' ? undefined : err.stack,
+    stack: process.env.NODE_ENV === "production" ? undefined : err.stack,
   });
 };
 
