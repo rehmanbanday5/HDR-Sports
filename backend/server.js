@@ -55,16 +55,13 @@ app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use(notFound);
 app.use(errorHandler);
 
+
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
 
-if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`[server] HDR API listening on port ${PORT}`);
   });
 }
 
 module.exports = app;
-
-}
-
