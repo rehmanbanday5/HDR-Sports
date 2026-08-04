@@ -29,6 +29,16 @@ const errorHandler = (err, req, res, next) => {
       .join(', ');
   }
 
+  if (
+    err.name === 'MongoServerSelectionError' ||
+    err.name === 'MongooseServerSelectionError' ||
+    err.name === 'MongoNetworkError' ||
+    err.name === 'MongoError'
+  ) {
+    statusCode = 503;
+    message = 'Database is currently unavailable. Please check MongoDB Atlas access settings.';
+  }
+
   if (err.name === 'JsonWebTokenError') {
     statusCode = 401;
     message = 'Invalid token';
