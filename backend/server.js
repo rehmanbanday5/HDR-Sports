@@ -25,6 +25,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:5174",
       "https://hdr-sports.vercel.app",
+      "https://hdr-sports-admin.vercel.app/admin/login",
     ],
     credentials: true,
   }),
