@@ -42,6 +42,8 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Routes
+app.get('/', (req, res) => res.status(200).json({ success: true, message: 'HDR API is running', env: process.env.NODE_ENV }));
+app.get('/api', (req, res) => res.status(200).json({ success: true, message: 'HDR API is running', env: process.env.NODE_ENV }));
 app.get('/api/health', (req, res) => res.status(200).json({ success: true, message: 'HDR API is running', env: process.env.NODE_ENV }));
 
 app.use('/api/auth', require('./routes/authRoutes'));
