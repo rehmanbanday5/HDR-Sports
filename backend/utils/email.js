@@ -72,3 +72,32 @@ exports.sendAdminNewOrderEmail = async (order) => {
     html,
   });
 };
+
+exports.sendOrderStatusUpdateEmail = async (order) => {
+  const transporter = getTransporter();
+
+  const html = `
+    <h2>HDR Sports Order Update</h2>
+
+    <p>Your order status has been updated.</p>
+
+    <h3>Order Details</h3>
+
+    <p><b>Order Number:</b> ${order.orderNumber}</p>
+
+    <p><b>New Status:</b> ${order.status}</p>
+
+    <p><b>Total:</b> Rs. ${order.pricing.total}</p>
+
+    <p>
+      Thank you for shopping with HDR Sports.
+    </p>
+  `;
+
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: order.customer.email,
+    subject: `HDR Sports Order Status Update - ${order.orderNumber}`,
+    html,
+  });
+};
