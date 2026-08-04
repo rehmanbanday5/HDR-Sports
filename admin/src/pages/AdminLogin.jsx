@@ -22,8 +22,10 @@ const AdminLogin = () => {
         password,
       });
 
-      // Save JWT token
-      localStorage.setItem("HDR_token", data.token);
+      // Save JWT token for admin requests
+      const token = data.token;
+      localStorage.setItem("HDR_token", token);
+      localStorage.setItem("token", token);
 
       toast.success("Admin login successful!");
       navigate("/admin");

@@ -1,8 +1,14 @@
-import { NavLink, Outlet, Link } from 'react-router-dom';
+import { NavLink, Outlet, Link } from "react-router-dom";
 import HDR from "../assets/HDR.png";
-import { LayoutDashboard, Package, Layers, ShoppingCart, Users, Settings } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Package,
+  Layers,
+  ShoppingCart,
+  Users,
+  Settings,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 
 const NAV_ITEMS = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -17,6 +23,7 @@ const AdminLayout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem("HDR_token");
     localStorage.removeItem("token");
     navigate("/admin/login");
   };
@@ -84,4 +91,3 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
-
