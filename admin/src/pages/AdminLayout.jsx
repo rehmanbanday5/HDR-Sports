@@ -7,6 +7,7 @@ import {
   ShoppingCart,
   Users,
   Settings,
+  Images,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +17,7 @@ const NAV_ITEMS = [
   { to: "/admin/categories", label: "Categories", icon: Layers },
   { to: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { to: "/admin/customers", label: "Customers", icon: Users },
+  { to: "/admin/instagram", label: "Instagram", icon: Images },
   { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

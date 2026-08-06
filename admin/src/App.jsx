@@ -11,6 +11,8 @@ import AdminOrderDetail from "./pages/AdminOrderDetail";
 import AdminCustomers from "./pages/AdminCustomers";
 import AdminLogin from "./pages/AdminLogin";
 import AdminSettings from "./pages/AdminSettings";
+import AdminInstagram from "./pages/AdminInstagram";
+
 
 function App() {
   return (
@@ -32,6 +34,7 @@ function App() {
             <Route path="orders/:id" element={<AdminOrderDetail />} />
 
             <Route path="customers" element={<AdminCustomers />} />
+            <Route path="instagram" element={<AdminInstagram />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
 
