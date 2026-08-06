@@ -1,14 +1,18 @@
 const asyncHandler = require('express-async-handler');
 const Product = require('../models/Product');
+const Category = require("../models/Category");
 const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
 
 // @desc    Browse/search/filter/sort products
 // @route   GET /api/products
 // query params: search, category, minPrice, maxPrice, sort, page, limit, featured, newArrival, bestSeller, inStock
 exports.getProducts = asyncHandler(async (req, res) => {
+  const Category = require("../models/Category");
+
   const {
     search,
     category,
+    categorySlug,
     minPrice,
     maxPrice,
     sort,
@@ -23,8 +27,19 @@ exports.getProducts = asyncHandler(async (req, res) => {
   const filter = { isActive: true };
 
   if (search) filter.$text = { $search: search };
-  if (category) filter.category = category;
-  if (featured === 'true') filter.isFeatured = true;
+if (category) {
+  filter.category = category;
+}
+
+if (categorySlug) {
+  const cat = await Category.findOne({ slug: categorySlug });
+
+  if (cat) {
+    filter.category = cat._id;
+  } else {
+    filter.category = null;
+  }
+}  if (featured === 'true') filter.isFeatured = true;
   if (newArrival === 'true') filter.isNewArrival = true;
   if (bestSeller === 'true') filter.isBestSeller = true;
 

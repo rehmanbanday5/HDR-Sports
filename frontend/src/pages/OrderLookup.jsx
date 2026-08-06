@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Package, Truck } from "lucide-react";
 import api from "../api/client";
-import { formatPrice } from "../utils/format";
+import { useCurrency } from "../context/CurrencyContext";
 
 const STATUS_STEPS = [
   "pending",
@@ -24,6 +24,7 @@ const OrderLookup = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const { formatCurrency } = useCurrency();
 
   const loadOrders = async () => {
     try {
@@ -139,7 +140,7 @@ const OrderLookup = () => {
                         </p>
 
                         <p className="mt-1 text-sm font-black text-[#0D111A]">
-                          {formatPrice(order.pricing.total)}
+                          {formatCurrency(order.pricing.total)}
                         </p>
                       </div>
 
@@ -192,7 +193,7 @@ const OrderLookup = () => {
                             <span>
                               Price:{" "}
                               <strong className="text-[#0D111A]">
-                                {formatPrice(item.unitPrice)}
+                                {formatCurrency(item.unitPrice)}
                               </strong>
                             </span>
 
@@ -392,7 +393,7 @@ const OrderLookup = () => {
                           </p>
 
                           <p className="mt-1 text-sm font-black text-[#0D111A]">
-                            {formatPrice(order.pricing.total)}
+                            {formatCurrency(order.pricing.total)}
                           </p>
                         </div>
                       </div>

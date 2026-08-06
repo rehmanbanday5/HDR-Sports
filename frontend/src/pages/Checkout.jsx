@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { Truck, Landmark, CreditCard, Smartphone } from 'lucide-react';
-import api from '../api/client';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import { useCurrency, RATES, SYMBOLS } from "../context/CurrencyContext";
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Truck, Landmark, CreditCard, Smartphone } from "lucide-react";
+import api from "../api/client";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useCurrency } from "../context/CurrencyContext";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import countryList from "react-select-country-list";
@@ -13,28 +13,45 @@ import countryList from "react-select-country-list";
 const COUNTRIES = countryList().getData();
 
 const PAYMENT_METHODS = [
-  { id: 'cod', label: 'Cash on Delivery', icon: Truck, localOnly: true, desc: 'Pay when your order arrives (Pakistan only).' },
-  { id: 'bank_transfer', label: 'Bank Transfer', icon: Landmark, desc: 'Manual transfer — details sent after order confirmation.' },
-  { id: 'jazzcash', label: 'JazzCash / EasyPaisa', icon: Smartphone, localOnly: true, desc: 'Pay instantly via mobile wallet.' },
- {
-  id: 'stripe',
-  label: 'Credit / Debit Card',
-  icon: CreditCard,
-  desc: 'Visa, Mastercard, and other international cards processed securely.',
-},
+  {
+    id: "cod",
+    label: "Cash on Delivery",
+    icon: Truck,
+    localOnly: true,
+    desc: "Pay when your order arrives (Pakistan only).",
+  },
+  {
+    id: "bank_transfer",
+    label: "Bank Transfer",
+    icon: Landmark,
+    desc: "Manual transfer — details sent after order confirmation.",
+  },
+  {
+    id: "jazzcash",
+    label: "JazzCash / EasyPaisa",
+    icon: Smartphone,
+    localOnly: true,
+    desc: "Pay instantly via mobile wallet.",
+  },
+  {
+    id: "stripe",
+    label: "Credit / Debit Card",
+    icon: CreditCard,
+    desc: "Visa, Mastercard, and other international cards processed securely.",
+  },
 ];
 
 const emptyForm = {
-  fullName: '',
-  email: '',
-  phone: '',
-  addressLine1: '',
-  addressLine2: '',
-  city: '',
-  state: '',
-  postalCode: '',
-  country: 'Pakistan',
-  orderNotes: '',
+  fullName: "",
+  email: "",
+  phone: "",
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  state: "",
+  postalCode: "",
+  country: "Pakistan",
+  orderNotes: "",
 };
 
 const Checkout = () => {
@@ -42,27 +59,21 @@ const Checkout = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const { currency } = useCurrency();
-
-  const symbol = SYMBOLS[currency];
-
-  const convertPrice = (value) =>
-    (value * RATES[currency]).toLocaleString(undefined, {
-      maximumFractionDigits: 2,
-    });
+  const { formatCurrency } = useCurrency();
 
   const [form, setForm] = useState({
     ...emptyForm,
-    fullName: user?.name || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
+    fullName: user?.name || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
   });
   const [shippingOptions, setShippingOptions] = useState([]);
   const [selectedShipping, setSelectedShipping] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [paymentMethod, setPaymentMethod] = useState("cod");
   const [submitting, setSubmitting] = useState(false);
 
-  const isInternational = form.country && form.country.toLowerCase() !== 'pakistan';
+  const isInternational =
+    form.country && form.country.toLowerCase() !== "pakistan";
 
   useEffect(() => {
     if (!cart.items || cart.items.length === 0) return;
@@ -108,23 +119,26 @@ const Checkout = () => {
     );
   }
 
-  
-
   const selectedOption = shippingOptions.find((o) => o.id === selectedShipping);
   const total = (cart.subtotal || 0) + (selectedOption?.cost || 0);
 
-  const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedShipping) {
-      toast.error('Please select a shipping method');
+      toast.error("Please select a shipping method");
       return;
     }
     setSubmitting(true);
     try {
       const payload = {
-        customer: { fullName: form.fullName, email: form.email, phone: form.phone },
+        customer: {
+          fullName: form.fullName,
+          email: form.email,
+          phone: form.phone,
+        },
         shippingAddress: {
           addressLine1: form.addressLine1,
           addressLine2: form.addressLine2,
@@ -134,14 +148,20 @@ const Checkout = () => {
           country: form.country,
         },
         orderNotes: form.orderNotes,
-        items: cart.items.map((i) => ({ productId: i.product, variantId: i.variantId, quantity: i.quantity })),
+        items: cart.items.map((i) => ({
+          productId: i.product,
+          variantId: i.variantId,
+          quantity: i.quantity,
+        })),
         shippingMethodId: selectedShipping,
         paymentMethod,
       };
-      const { data } = await api.post('/orders', payload);
+      const { data } = await api.post("/orders", payload);
       await clearCart();
-      toast.success('Order placed successfully!');
-      navigate(`/order-confirmation/${data.order.orderNumber}`, { state: { email: form.email } });
+      toast.success("Order placed successfully!");
+      navigate(`/order-confirmation/${data.order.orderNumber}`, {
+        state: { email: form.email },
+      });
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -152,13 +172,19 @@ const Checkout = () => {
   if (!cart.items || cart.items.length === 0) {
     return (
       <div className="container-HDR py-24 text-center">
-        <h1 className="font-display text-2xl font-semibold mb-3">Your cart is empty</h1>
-        <Link to="/shop" className="btn-primary inline-flex">Browse Products</Link>
+        <h1 className="font-display text-2xl font-semibold mb-3">
+          Your cart is empty
+        </h1>
+        <Link to="/shop" className="btn-primary inline-flex">
+          Browse Products
+        </Link>
       </div>
     );
   }
 
-  const availablePaymentMethods = PAYMENT_METHODS.filter((m) => !(isInternational && m.localOnly));
+  const availablePaymentMethods = PAYMENT_METHODS.filter(
+    (m) => !(isInternational && m.localOnly),
+  );
 
   return (
     <div className="container-HDR py-10">
@@ -297,9 +323,7 @@ const Checkout = () => {
                     </div>
                   </div>
                   <span className="text-sm font-semibold">
-                    {o.cost === 0
-                      ? "Free"
-                      : `${symbol} ${convertPrice(o.cost)}`}
+                    {o.cost === 0 ? "Free" : formatCurrency(o.cost)}
                   </span>
                 </label>
               ))}
@@ -367,7 +391,7 @@ const Checkout = () => {
                   <p className="truncate font-medium">{item.name}</p>
                 </div>
                 <span className="font-medium">
-                  {symbol} {convertPrice(item.price * item.quantity)}
+                  {formatCurrency(item.price * item.quantity)}
                 </span>
               </div>
             ))}
@@ -375,9 +399,7 @@ const Checkout = () => {
           <div className="border-t border-ink/10 pt-4 space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-ink-soft">Subtotal</span>
-              <span>
-                {symbol} {convertPrice(cart.subtotal)}
-              </span>
+              <span>{formatCurrency(cart.subtotal)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-ink-soft">Shipping</span>
@@ -385,15 +407,13 @@ const Checkout = () => {
                 {selectedOption
                   ? selectedOption.cost === 0
                     ? "Free"
-                    : `${symbol} ${convertPrice(selectedOption.cost)}`
+                    : formatCurrency(selectedOption.cost)
                   : "—"}
               </span>
             </div>
             <div className="flex justify-between font-semibold text-base pt-2 border-t border-ink/10">
               <span>Total</span>
-              <span>
-                {symbol} {convertPrice(total)}
-              </span>
+              <span>{formatCurrency(total)}</span>
             </div>
           </div>
           <button

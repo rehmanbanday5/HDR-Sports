@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {ShoppingBag, Search, User, Menu, X, LogOut, ChevronDown} from "lucide-react";
+import {
+  ShoppingBag,
+  Search,
+  User,
+  Menu,
+  X,
+  LogOut,
+  ChevronDown,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { slugify } from "../utils/format";
@@ -9,28 +17,55 @@ import { useCurrency } from "../context/CurrencyContext";
 
 const NAV_DROPDOWNS = [
   {
-    title: "Cricket",
-    items: ["Cricket Bats", "Cricket Balls", "Batting Pads"],
+    title: "Cricket Bats",
+    items: [
+      "English Willow",
+      "Kashmir Willow",
+      "Grade 1",
+      "Grade 2",
+      "Grade 3",
+    ],
+  },
+  {
+    title: "Cricket Balls",
+    items: ["Red Ball", "White Ball", "Synthetic Ball"],
+  },
+  {
+    title: "Cricket Protection",
+    items: [
+      "Helmets",
+      "Batting Pads",
+      "Batting Gloves",
+      "Gloves Inner",
+      "Arm Guards",
+      "Thigh Pads",
+      "Chest Guards",
+    ],
+  },
+  {
+    title: "Wikcet Keeping",
+    items: [
+      "Gloves",
+      "Pads",
+      "Gloves Inner"
+    ],
   },
   {
     title: "Sports Apparel",
-    items: ["Shirts", "Trousers", "Hoodies", "Track Suits"],
-  },
-  {
-    title: "Cricket Accessories",
-    items: ["Helmets", "Guard", "Shoes", "Grips", "Gloves Inner"],
+    items: ["Shirts", "Trousers", "Hoodies", "Track Suits", "Shoes"],
   },
   {
     title: "Cricket Bags",
-    items: ["Backpack", "Kit Bags"],
+    items: ["wheelie Bags", "Duffle Bags", "Backpack"],
   },
 ];
 
 const Navbar = () => {
-  const { currency, setCurrency } = useCurrency();
+  const { currency, setCurrency, currencyOptions } = useCurrency();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [currencySearch, setCurrencySearch] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
 
@@ -49,38 +84,28 @@ const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/10">
-      {/* Top Announcement Bar */}
-      <div className="bg-[#0D111A] text-white text-center text-xs font-medium tracking-wide py-2 px-4">
-        Free Standard Shipping On Local Orders Over Rs. 15,000
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-black/10 shadow-sm">
+      <div className="bg-[#0D111A] text-white text-center text-[11px] font-semibold tracking-[0.24em] uppercase py-2 px-4">
+        Free standard shipping on local orders over Rs. 15,000 — international
+        delivery available.
       </div>
 
-      {/* Main Navbar */}
-      <div className="container-HDR flex items-center justify-between h-20 gap-6">
-        {/* Logo */}
-        <Link
-          to="/"
-          className="flex items-center shrink-0"
-          aria-label="HDR Sports Home"
-        >
+      <div className="container-HDR flex items-center justify-between gap-4 py-4">
+        <Link to="/" className="flex items-center gap-4 shrink-0 -left-5">
           <img
             src={HDR}
             alt="HDR Sports Logo"
-            className="h-16 w-auto object-contain"
+            className="h-16 w-auto object-contain translate-x-[-25px]"
           />
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-semibold">
-          {/* Home */}
+        <nav className="hidden lg:flex flex-1 justify-center items-center gap-6 xl:gap-7 text-sm font-semibold text-ink">
           <Link
             to="/"
-            className="text-[#0D111A] hover:text-[#D4AF37] transition-colors duration-300"
+            className="transition-colors duration-300 hover:text-[#D4AF37]"
           >
             Home
           </Link>
-
-          {/* Dropdown Menus */}
           {NAV_DROPDOWNS.map((menu) => (
             <div
               key={menu.title}
@@ -90,132 +115,123 @@ const Navbar = () => {
             >
               <button
                 type="button"
-                className={`relative flex items-center gap-1.5 py-7 transition-colors duration-300 ${
+                className={`relative flex items-center gap-1 whitespace-nowrap transition-colors duration-300 ${
                   activeDropdown === menu.title
                     ? "text-[#D4AF37]"
-                    : "text-[#0D111A] hover:text-[#D4AF37]"
+                    : "hover:text-[#D4AF37]"
                 }`}
               >
                 {menu.title}
-
-                <ChevronDown size={15} />
+                <ChevronDown size={14} />
               </button>
-
-              {/* Dropdown */}
               {activeDropdown === menu.title && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 w-56 bg-white border border-black/10 shadow-[0_15px_40px_rgba(0,0,0,0.12)] rounded-xl py-3 z-50">
+                <div className="absolute top-full left-1/2 z-50 w-60 -translate-x-1/2 rounded-3xl border border-black/10 bg-white shadow-[0_20px_80px_rgba(15,23,42,0.16)] py-4">
                   {menu.items.map((item) => (
                     <Link
                       key={item}
                       to={`/shop?categorySlug=${slugify(item)}`}
-                      className="group relative block px-5 py-3 text-sm text-[#0D111A] transition-colors duration-300 "
+                      className="group block px-6 py-3 text-sm text-[#0D111A] transition-colors duration-300 hover:text-[#D4AF37]"
                     >
                       {item}
-
-                      {/* Equal Golden Line */}
-                      <span className="absolute left-5 bottom-1 w-8 h-[2px] bg-[#D4AF37] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                      <span className="mt-1 block h-[2px] w-8 bg-[#D4AF37] scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
                     </Link>
                   ))}
                 </div>
               )}
             </div>
           ))}
+          <Link
+            to="/shop"
+            className="whitespace-nowrap transition-colors duration-300 hover:text-[#D4AF37]"
+          >
+            Shop All
+          </Link>
         </nav>
 
-        {/* Right Side Icons */}
-        <div className="flex items-center gap-1.5 sm:gap-3">
-          {/* Search */}
+        <div className="flex items-center gap-2">
           <button
             aria-label="Search products"
             onClick={() => setSearchOpen((s) => !s)}
-            className="p-2 hover:text-[#D4AF37] rounded-full transition-colors"
+            className="p-2 rounded-full text-ink transition duration-200 hover:text-[#D4AF37]"
           >
             <Search size={20} />
           </button>
 
-          {/* Account */}
           <div className="relative">
             <button
               aria-label="Account"
               onClick={() => setProfileOpen((s) => !s)}
-              className="p-2 hover:text-[#D4AF37] rounded-full transition-colors"
+              className="p-2 rounded-full text-ink transition duration-200 hover:text-[#D4AF37]"
             >
               <User size={20} />
             </button>
-
             {profileOpen && (
               <div
-                className="absolute right-0 mt-3 w-56 bg-white border border-black/10 shadow-[0_15px_40px_rgba(0,0,0,0.12)] rounded-xl py-2 z-50"
+                className="absolute right-0 mt-3 w-56 rounded-[1.5rem] border border-black/10 bg-white p-2 shadow-[0_15px_40px_rgba(15,23,42,0.16)]"
                 onMouseLeave={() => setProfileOpen(false)}
               >
                 {user ? (
                   <>
-                    <div className="px-4 py-3 text-xs text-gray-500 border-b border-black/10">
+                    <div className="rounded-2xl border border-ink/10 bg-[#F8F5EF] px-4 py-3 text-xs text-ink-soft">
                       Signed in as{" "}
-                      <span className="font-bold text-[#0D111A]">
+                      <span className="font-semibold text-ink">
                         {user.name}
                       </span>
                     </div>
-
                     <Link
                       to="/profile"
-                      className="block px-4 py-2.5 text-sm hover:bg-gray-50"
+                      className="block rounded-2xl px-4 py-3 text-sm text-ink transition hover:bg-ink/5"
                       onClick={() => setProfileOpen(false)}
                     >
                       My Profile
                     </Link>
-
                     <Link
                       to="/orders"
-                      className="block px-4 py-2.5 text-sm hover:bg-gray-50"
+                      className="block rounded-2xl px-4 py-3 text-sm text-ink transition hover:bg-ink/5"
                       onClick={() => setProfileOpen(false)}
                     >
                       Order History
                     </Link>
-
                     {isAdmin && (
                       <Link
                         to="/admin"
-                        className="block px-4 py-2.5 text-sm hover:bg-gray-50"
+                        className="block rounded-2xl px-4 py-3 text-sm text-ink transition hover:bg-ink/5"
                         onClick={() => setProfileOpen(false)}
                       >
                         Admin Dashboard
                       </Link>
                     )}
-
                     <button
                       onClick={() => {
                         logout();
                         setProfileOpen(false);
                         navigate("/");
                       }}
-                      className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 flex items-center gap-2 text-red-600"
+                      className="mt-2 w-full rounded-2xl px-4 py-3 text-left text-sm text-red-600 transition hover:bg-red-50"
                     >
-                      <LogOut size={14} />
-                      Log out
+                      <LogOut size={14} className="inline-block align-middle" />{" "}
+                      <span className="align-middle">Log out</span>
                     </button>
                   </>
                 ) : (
                   <>
                     <Link
                       to="/login"
-                      className="block px-4 py-2.5 text-sm hover:text-[#D4AF37]"
+                      className="block rounded-2xl px-4 py-3 text-sm text-ink transition hover:bg-ink/5"
                       onClick={() => setProfileOpen(false)}
                     >
                       Log in
                     </Link>
-
                     <Link
                       to="/register"
-                      className="block px-4 py-2.5 text-sm hover:text-[#D4AF37]"
+                      className="block rounded-2xl px-4 py-3 text-sm text-ink transition hover:bg-ink/5"
                       onClick={() => setProfileOpen(false)}
                     >
                       Create account
                     </Link>
-
                     <Link
                       to="/order-lookup"
-                      className="block px-4 py-2.5 text-sm hover:text-[#D4AF37]"
+                      className="block rounded-2xl px-4 py-3 text-sm text-ink transition hover:bg-ink/5"
                       onClick={() => setProfileOpen(false)}
                     >
                       Track an order
@@ -226,82 +242,58 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Cart */}
           <Link
             to="/cart"
             aria-label="Cart"
-            className="relative inline-flex items-center justify-center p-2 rounded-full text-[#080B12] hover:text-[#D4AF37] transition-all duration-300"
+            className="relative inline-flex items-center justify-center rounded-full p-2 text-ink transition duration-200 hover:text-[#D4AF37]"
           >
             <ShoppingBag size={20} />
-
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-5 w-5 bg-[#D4AF37] text-[#080B12] text-[11px] rounded-full font-black flex items-center justify-center border-2 border-white">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#D4AF37] text-[11px] font-black text-[#080B12] border-2 border-white">
                 {itemCount > 10 ? "10+" : itemCount}
               </span>
             )}
           </Link>
-          <select
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
-            className="bg-transparent text-sm outline-none"
-          >
-            {[
-              "PKR",
-              "USD",
-              "EUR",
-              "GBP",
-              "AED",
-              "SAR",
-              "CAD",
-              "AUD",
-              "NZD",
-              "JPY",
-              "CNY",
-              "INR",
-              "BDT",
-              "NPR",
-              "LKR",
-              "TRY",
-              "RUB",
-              "ZAR",
-              "MYR",
-              "SGD",
-              "HKD",
-            ].map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
 
-          {/* Mobile Menu */}
+          <div className="hidden sm:block">
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="rounded-full border border-ink/10 bg-white px-3 py-2 text-sm outline-none transition duration-200 hover:border-ink/20"
+            >
+              {currencyOptions.map(({ code, label }) => (
+                <option key={code} value={code}>
+                  {code}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button
-            aria-label="Menu"
+            className="lg:hidden p-2 rounded-full text-ink transition duration-200 hover:text-[#D4AF37]"
             onClick={() => setMenuOpen((s) => !s)}
-            className="p-2.5 hover:bg-[#D4AF37]/10 rounded-full transition-colors lg:hidden"
           >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
-      {/* Search Bar */}
       {searchOpen && (
-        <div className="border-t border-black/10 bg-white">
+        <div className="container-HDR border-t border-black/10 bg-white/90 py-4">
           <form
             onSubmit={handleSearch}
-            className="container-HDR py-4 flex items-center gap-3"
+            className="mx-auto flex max-w-3xl items-center gap-3 rounded-full border border-ink/10 bg-ink/5 px-4 py-3"
           >
+            <Search size={18} className="text-ink/60" />
             <input
-              autoFocus
-              type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search bats, balls, gloves, apparel..."
-              className="flex-1 bg-transparent text-sm py-1 text-[#0D111A] border border-black rounded-md px-3 outline-none focus:outline-none focus:border-black focus:ring-0"
+              placeholder="Search cricket bats, gloves, helmets..."
+              className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-soft"
             />
-
             <button
               type="submit"
-              className="text-sm font-bold hover:text-[#D4AF37] text-[#0D111A] transition-colors"
+              className="rounded-full bg-ink px-5 py-2 text-sm font-semibold text-chalk transition hover:bg-[#0a0a0a]"
             >
               Search
             </button>
@@ -309,40 +301,74 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Mobile Menu */}
       {menuOpen && (
-        <div className="lg:hidden border-t border-black/10 bg-white">
-          <nav className="container-HDR py-4 flex flex-col gap-1 text-sm">
-            <Link
-              to="/"
-              onClick={() => setMenuOpen(false)}
-              className="py-3 font-bold border-b border-black/5 text-[#0D111A] hover:text-[#D4AF37] transition-colors"
-            >
-              Home
-            </Link>
-
+        <div className="lg:hidden border-t border-black/10 bg-white shadow-[0_20px_80px_rgba(15,23,42,0.16)]">
+          <div className="container-HDR space-y-6 py-6">
+            <div className="grid gap-3">
+              <Link
+                to="/"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-3xl border border-ink/10 px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
+              >
+                Home
+              </Link>
+              <Link
+                to="/shop"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-3xl border border-ink/10 px-4 py-3 text-sm font-semibold text-ink transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
+              >
+                Shop All
+              </Link>
+            </div>
             {NAV_DROPDOWNS.map((menu) => (
-              <div key={menu.title} className="py-2">
-                <p className="py-2 font-bold text-[#0D111A] hover:text-[#D4AF37] transition-colors cursor-pointer">
-                  {menu.title}{" "}
+              <div
+                key={menu.title}
+                className="rounded-3xl border border-ink/10 bg-[#f8f5ef] p-4"
+              >
+                <p className="text-xs uppercase tracking-[0.28em] text-ink-soft mb-3">
+                  {menu.title}
                 </p>
-
-                <div className="pl-4 border-l-2 border-[#D4AF37]/40">
+                <div className="grid grid-cols-2 gap-3">
                   {menu.items.map((item) => (
                     <Link
                       key={item}
                       to={`/shop?categorySlug=${slugify(item)}`}
                       onClick={() => setMenuOpen(false)}
-                      className="group relative block py-2 text-gray-500 hover:text-[#D4AF37] transition-colors"
+                      className="rounded-3xl bg-white px-4 py-3 text-sm text-ink transition hover:bg-[#D4AF37] hover:text-white"
                     >
                       {item}
-                      <span className="absolute left-0 bottom-0 w-8 h-[2px] bg-[#D4AF37] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                     </Link>
                   ))}
                 </div>
               </div>
             ))}
-          </nav>
+            <div className="grid gap-3">
+              <Link
+                to="/order-lookup"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-3xl border border-ink/10 px-4 py-3 text-sm text-ink transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
+              >
+                Track Order
+              </Link>
+              {user ? (
+                <Link
+                  to="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-3xl border border-ink/10 px-4 py-3 text-sm text-ink transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
+                >
+                  My Profile
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-3xl border border-ink/10 px-4 py-3 text-sm text-ink transition hover:border-[#D4AF37] hover:text-[#D4AF37]"
+                >
+                  Log in
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </header>

@@ -1,15 +1,20 @@
 import { Link } from "react-router-dom";
-import { primaryImage, displayPrice, originalPrice } from "../utils/format";
-import StarRating from "./StarRating";
+import { displayPrice, originalPrice } from "../utils/format";
 import { useCurrency } from "../context/CurrencyContext";
 
 const ProductCard = ({ product }) => {
-  const { convertPrice, symbol, currency } = useCurrency();
+  const { formatCurrency } = useCurrency();
 
-  const price = convertPrice(displayPrice(product));
+  const images = product.images || [];
+
+  const firstImage = images[0]?.url || "https://placehold.co/600x600?text=HDR";
+
+  const secondImage = images[1]?.url || firstImage;
+
+  const price = formatCurrency(displayPrice(product));
 
   const original = originalPrice(product)
-    ? convertPrice(originalPrice(product))
+    ? formatCurrency(originalPrice(product))
     : null;
 
   const outOfStock = product.hasVariants
@@ -19,60 +24,103 @@ const ProductCard = ({ product }) => {
   return (
     <Link
       to={`/product/${product.slug}`}
-      className="group block bg-white border border-ink/10 hover:border-ink/25 transition-colors duration-200 rounded-sm overflow-hidden"
+      className="group block overflow-hidden"
     >
-      <div className="relative aspect-square overflow-hidden bg-chalk">
+      {/* IMAGE */}
+
+      <div className="relative aspect-square overflow-hidden bg-[#f8f8f8]">
+        {/* First */}
+
         <img
-          src={primaryImage(product)}
+          src={firstImage}
           alt={product.name}
-          loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:opacity-0"
+        />
+
+        {/* Second */}
+
+        <img
+          src={secondImage}
+          alt={product.name}
+          className=" absolute inset-0 w-full h-full object-cover opacity-0 scale-105 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-110"
         />
 
         {original && (
-          <span className="absolute top-3 left-3 bg-leather text-chalk text-[10px] font-mono font-bold uppercase tracking-wide px-2 py-1 rounded-sm">
-            Sale
-          </span>
+          <div className="absolute top-3 left-3 bg-[#D4AF37] text-black text-[11px] px-3 py-1 font-semibold rounded-full">
+            SALE
+          </div>
         )}
 
         {outOfStock && (
-          <div className="absolute inset-0 bg-ink/50 flex items-center justify-center">
-            <span className="text-chalk text-xs font-mono uppercase tracking-widest">
-              Out of Stock
+          <div className="absolute inset-0 bg-black/45 flex items-center justify-center">
+            <span className="bg-white px-4 py-2 text-xs font-semibold rounded-full">
+              OUT OF STOCK
             </span>
           </div>
         )}
       </div>
+      {/* INFO */}
 
-      <div className="p-4">
-        {product.category?.name && (
-          <p className="text-[10px] font-mono uppercase tracking-widest text-willow-dark mb-1">
-            {product.category.name}
-          </p>
-        )}
+      <div
+        className="
+    px-4
+    py-3
+    relative
+    overflow-hidden
+  "
+      >
+        {/* White Hover Background */}
 
-        <h3 className="font-display font-semibold text-ink leading-snug mb-1.5 line-clamp-2">
-          {product.name}
-        </h3>
+        <div
+          className="
+      absolute
+      inset-0
+      bg-white
+      rounded-md
+      opacity-0
+      scale-95
+      transition-all
+      duration-300
+      ease-out
+      group-hover:opacity-100
+      group-hover:scale-100
+      -z-10
+    "
+        />
 
-        {product.ratingCount > 0 && (
-          <StarRating
-            rating={product.ratingAverage}
-            count={product.ratingCount}
-          />
-        )}
+        <div
+          className="
+      transition-all
+      duration-300
+      group-hover:-translate-y-1
+    "
+        >
+          <h3
+            className="
+        text-[15px]
+        font-semibold
+        text-[#111]
+        leading-[20px]
+        line-clamp-2
+        transition-colors
+        duration-300
+        group-hover:text-[#D4AF37]
+      "
+          >
+            {product.name}
+          </h3>
 
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="font-semibold text-ink">
-            {symbol} {currency === "PKR" ? Math.round(price) : price.toFixed(2)}
-          </span>
-
-          {original && (
-            <span className="text-sm text-ink-soft line-through">
-              {symbol}{" "}
-              {currency === "PKR" ? Math.round(original) : original.toFixed(2)}
+          <div className="mt-2 flex items-center gap-2">
+            <span className="text-[18px] font-bold text-[#080B12]">
+              {price}
             </span>
-          )}
+
+            {original && (
+              <span className="text-[14px] text-gray-400 line-through">
+                {original}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </Link>

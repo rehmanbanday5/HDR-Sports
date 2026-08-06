@@ -1,27 +1,22 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
-import { useCart } from '../context/CartContext';
-import EmptyState from '../components/EmptyState';
-import { useCurrency, RATES, SYMBOLS } from "../context/CurrencyContext";
+import { Link, useNavigate } from "react-router-dom";
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { useCart } from "../context/CartContext";
+import EmptyState from "../components/EmptyState";
+import { useCurrency } from "../context/CurrencyContext";
 
 const Cart = () => {
   const { cart, loading, updateQuantity, removeItem } = useCart();
   const navigate = useNavigate();
-const { currency } = useCurrency();
-
-const symbol = SYMBOLS[currency];
-
-  const convertPrice = (value) =>
-    (value * RATES[currency]).toLocaleString(undefined, {
-      maximumFractionDigits: 2,
-    });
+  const { formatCurrency } = useCurrency();
 
   if (loading) {
     return (
       <div className="container-HDR py-16">
         <div className="skeleton h-8 w-48 mb-8" />
         <div className="space-y-4">
-          {[1, 2, 3].map((i) => <div key={i} className="skeleton h-24 w-full" />)}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="skeleton h-24 w-full" />
+          ))}
         </div>
       </div>
     );
@@ -83,7 +78,7 @@ const symbol = SYMBOLS[currency];
                   </p>
                 )}
                 <p className="text-sm font-semibold">
-                  {symbol} {convertPrice(item.price)}
+                  {formatCurrency(item.price)}
                 </p>
                 <div className="flex items-center gap-4 mt-3">
                   <div className="flex items-center border border-ink/20 rounded-sm">
@@ -119,7 +114,7 @@ const symbol = SYMBOLS[currency];
                 </div>
               </div>
               <p className="font-semibold text-sm shrink-0">
-                {symbol} {convertPrice(item.price * item.quantity)}
+                {formatCurrency(item.price * item.quantity)}
               </p>
             </div>
           ))}
@@ -131,9 +126,7 @@ const symbol = SYMBOLS[currency];
           </h2>
           <div className="flex justify-between text-sm mb-2">
             <span className="text-ink-soft">Subtotal</span>
-            <span className="font-medium">
-              {symbol} {convertPrice(cart.subtotal)}
-            </span>
+            <span className="font-medium">{formatCurrency(cart.subtotal)}</span>
           </div>
           <p className="text-xs text-ink-soft mb-4">
             Shipping and taxes calculated at checkout.

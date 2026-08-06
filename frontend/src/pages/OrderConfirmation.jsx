@@ -1,20 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
-import { CheckCircle2 } from 'lucide-react';
-import api from '../api/client';
-import { useCurrency, RATES, SYMBOLS } from "../context/CurrencyContext";
+import { useEffect, useState } from "react";
+import { useParams, Link, useLocation } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
+import api from "../api/client";
+import { useCurrency } from "../context/CurrencyContext";
 
 const OrderConfirmation = () => {
   const { orderNumber } = useParams();
   const location = useLocation();
-  const { currency } = useCurrency();
-
-  const symbol = SYMBOLS[currency];
-
-  const convertPrice = (value) =>
-    (value * RATES[currency]).toLocaleString(undefined, {
-      maximumFractionDigits: 2,
-    });
+  const { formatCurrency } = useCurrency();
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(false);
 
@@ -25,7 +18,7 @@ const OrderConfirmation = () => {
       return;
     }
     api
-      .get('/orders/lookup', { params: { orderNumber, email } })
+      .get("/orders/lookup", { params: { orderNumber, email } })
       .then(({ data }) => setOrder(data.order))
       .catch(() => setError(true));
   }, [orderNumber, location.state]);
@@ -33,17 +26,26 @@ const OrderConfirmation = () => {
   if (error) {
     return (
       <div className="container-HDR py-24 text-center">
-        <h1 className="font-display text-2xl font-semibold mb-3">Order #{orderNumber}</h1>
+        <h1 className="font-display text-2xl font-semibold mb-3">
+          Order #{orderNumber}
+        </h1>
         <p className="text-ink-soft mb-6">
-          Your order was placed successfully. Use the order lookup page with your email to view full details anytime.
+          Your order was placed successfully. Use the order lookup page with
+          your email to view full details anytime.
         </p>
-        <Link to="/order-lookup" className="btn-primary inline-flex">Track Your Order</Link>
+        <Link to="/order-lookup" className="btn-primary inline-flex">
+          Track Your Order
+        </Link>
       </div>
     );
   }
 
   if (!order) {
-    return <div className="container-HDR py-24 text-center text-ink-soft">Loading your order...</div>;
+    return (
+      <div className="container-HDR py-24 text-center text-ink-soft">
+        Loading your order...
+      </div>
+    );
   }
 
   return (
@@ -70,7 +72,7 @@ const OrderConfirmation = () => {
                 {item.name} × {item.quantity}
               </span>
               <span className="font-medium">
-                {symbol} {convertPrice(item.lineTotal)}
+                {formatCurrency(item.lineTotal)}
               </span>
             </div>
           ))}
@@ -79,24 +81,17 @@ const OrderConfirmation = () => {
         <div className="border-t border-ink/10 pt-4 space-y-1.5 text-sm">
           <div className="flex justify-between">
             <span className="text-ink-soft">Subtotal</span>
-            <span>
-              {" "}
-              {symbol} {convertPrice(order.pricing.subtotal)}{" "}
-            </span>
+            <span>{formatCurrency(order.pricing.subtotal)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-ink-soft">
               Shipping ({order.shippingMethod.name})
             </span>
-            <span>
-              {symbol} {convertPrice(order.pricing.shippingCost)}
-            </span>
+            <span>{formatCurrency(order.pricing.shippingCost)}</span>
           </div>
           <div className="flex justify-between font-semibold text-base pt-2 border-t border-ink/10 mt-2">
             <span>Total</span>
-            <span>
-              {symbol} {convertPrice(order.pricing.total)}
-            </span>
+            <span>{formatCurrency(order.pricing.total)}</span>
           </div>
         </div>
       </div>

@@ -1,31 +1,50 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import api from '../api/client';
-import { formatPrice } from '../utils/format';
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import api from "../api/client";
+import { useCurrency } from "../context/CurrencyContext";
 
-const STATUS_STEPS = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
+const STATUS_STEPS = [
+  "pending",
+  "confirmed",
+  "processing",
+  "shipped",
+  "delivered",
+];
 
 const OrderDetail = () => {
   const { id } = useParams();
+  const { formatCurrency } = useCurrency();
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    api.get(`/users/orders/${id}`).then(({ data }) => setOrder(data.order)).catch(() => setError(true));
+    api
+      .get(`/users/orders/${id}`)
+      .then(({ data }) => setOrder(data.order))
+      .catch(() => setError(true));
   }, [id]);
 
   if (error) {
     return (
       <div className="container-HDR py-24 text-center">
-        <h1 className="font-display text-2xl font-semibold mb-3">Order not found</h1>
-        <Link to="/orders" className="text-pitch font-semibold hover:underline">Back to orders</Link>
+        <h1 className="font-display text-2xl font-semibold mb-3">
+          Order not found
+        </h1>
+        <Link to="/orders" className="text-pitch font-semibold hover:underline">
+          Back to orders
+        </Link>
       </div>
     );
   }
 
-  if (!order) return <div className="container-HDR py-24 text-center text-ink-soft">Loading...</div>;
+  if (!order)
+    return (
+      <div className="container-HDR py-24 text-center text-ink-soft">
+        Loading...
+      </div>
+    );
 
-  const isCancelled = order.status === 'cancelled';
+  const isCancelled = order.status === "cancelled";
   const currentStepIndex = STATUS_STEPS.indexOf(order.status);
 
   return (
@@ -108,22 +127,24 @@ const OrderDetail = () => {
               <span>
                 {item.name} × {item.quantity}
               </span>
-              <span className="font-medium">{formatPrice(item.lineTotal)}</span>
+              <span className="font-medium">
+                {formatCurrency(item.lineTotal)}
+              </span>
             </div>
           ))}
         </div>
         <div className="border-t border-ink/10 pt-4 space-y-1.5 text-sm">
           <div className="flex justify-between">
             <span className="text-ink-soft">Subtotal</span>
-            <span>{formatPrice(order.pricing.subtotal)}</span>
+            <span>{formatCurrency(order.pricing.subtotal)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-ink-soft">Shipping</span>
-            <span>{formatPrice(order.pricing.shippingCost)}</span>
+            <span>{formatCurrency(order.pricing.shippingCost)}</span>
           </div>
           <div className="flex justify-between font-semibold text-base pt-2 border-t border-ink/10 mt-2">
             <span>Total</span>
-            <span>{formatPrice(order.pricing.total)}</span>
+            <span>{formatCurrency(order.pricing.total)}</span>
           </div>
         </div>
       </div>

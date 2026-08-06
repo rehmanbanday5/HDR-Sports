@@ -2,25 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
-html { scroll-behavior: smooth; }
-body { @apply bg-chalk text-ink font-body antialiased; }
-::selection { @apply bg-gold/40 text-ink; }
-*:focus-visible { outline: 2px solid #D4A73D; outline-offset: 2px; }
+html {
+  scroll-behavior: smooth;
+}
+body {
+  @apply bg-[#f8f5ef] text-ink font-body antialiased;
+}
+::selection {
+  @apply bg-gold/40 text-ink;
+}
+*:focus-visible {
+  outline: 2px solid #d4a73d;
+  outline-offset: 2px;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 }
 
-
-
-.container-HDR { @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10; }
-.btn-primary { @apply inline-flex items-center justify-center gap-2 bg-pitch text-chalk font-body font-semibold px-6 py-3 rounded-sm hover:bg-pitch-dark transition-colors duration-200; }
-.btn-secondary { @apply inline-flex items-center justify-center gap-2 bg-transparent border border-ink/20 text-ink font-body font-semibold px-6 py-3 rounded-sm hover:border-ink transition-colors duration-200; }
-.btn-accent { @apply inline-flex items-center justify-center gap-2 bg-leather text-chalk font-body font-semibold px-6 py-3 rounded-sm hover:bg-leather-dark transition-colors duration-200; }
-.eyebrow { @apply text-xs font-mono font-semibold tracking-[0.2em] uppercase text-willow-dark; }
-.section-heading { @apply font-display text-3xl sm:text-4xl font-semibold text-ink; }
-.skeleton { @apply animate-pulse bg-ink/10 rounded-sm; }
+.container-HDR {
+  @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10;
+}
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 bg-ink text-chalk font-body font-semibold px-6 py-3 rounded-full shadow-lg shadow-black/5 transition duration-200 hover:bg-[#111111];
+}
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 bg-transparent border border-ink/10 text-ink font-body font-semibold px-6 py-3 rounded-full transition duration-200 hover:border-ink hover:text-ink;
+}
+.btn-accent {
+  @apply inline-flex items-center justify-center gap-2 bg-gold text-ink font-body font-semibold px-6 py-3 rounded-full shadow-lg shadow-gold/20 transition duration-200 hover:bg-[#c59f32];
+}
+.eyebrow {
+  @apply text-xs font-mono font-semibold tracking-[0.24em] uppercase text-willow-dark;
+}
+.section-heading {
+  @apply font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-ink leading-tight;
+}
+.section-note {
+  @apply text-sm text-ink-soft max-w-2xl leading-relaxed;
+}
+.premium-card {
+  @apply rounded-3xl border border-ink/10 bg-white/95 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden;
+}
+.premium-panel {
+  @apply rounded-[2rem] bg-white/90 border border-ink/10 shadow-[0_25px_80px_rgba(15,23,42,0.08)] p-8;
+}
+.section-surface {
+  @apply rounded-[2rem] bg-white/90 border border-ink/10 shadow-sm;
+}
+.section-divider {
+  @apply h-[1px] w-full bg-ink/10 my-10;
+}
+.badge-pill {
+  @apply inline-flex items-center gap-2 rounded-full bg-gold/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-ink;
+}
+.hero-overlay {
+  @apply from-black/30 via-black/10 to-black/50;
+}
+.feature-tag {
+  @apply inline-flex items-center gap-2 rounded-full bg-ink/95 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-gold shadow-lg shadow-black/10;
+}
+.solid-shadow {
+  @apply shadow-[0_16px_40px_rgba(15,23,42,0.12)];
+}
+.skeleton {
+  @apply animate-pulse bg-ink/10 rounded-2xl;
+}
