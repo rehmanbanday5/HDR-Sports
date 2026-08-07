@@ -164,7 +164,7 @@ const Footer = () => {
               <div className="flex h-8 items-center opacity-100 transition hover:grayscale-0 whitescale">
                 <img
                   src="/payments/easypaisa.png"
-                  className="h-8 sm:h-10 w-auto"
+                  className="h-10 w-auto"
                   alt="EasyPaisa"
                 />
               </div>
