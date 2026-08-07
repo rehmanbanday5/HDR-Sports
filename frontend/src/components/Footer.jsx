@@ -21,12 +21,12 @@ const Footer = () => {
                 HDR Sports
               </p>
 
-              <h2 className="mt-3 text-3xl font-display font-semibold">
+              <h2 className="mt-3 text-2xl sm:text-3xl font-display font-semibold leading-tight">
                 Elite Cricket Essentials Crafted For Global Players
               </h2>
             </div>
 
-            <p className="max-w-xl text-sm leading-relaxed text-slate-300">
+            <p className="max-w-xl text-sm leading-relaxed text-slate-300 pr-0 lg:pr-6">
               Premium cricket equipment built to deliver confidence,
               performance, and reliability on every pitch. HDR Sports serves
               local and international players with trusted gear and elevated
@@ -145,9 +145,9 @@ const Footer = () => {
       </div>
       <div className="mt-6 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-10 pt-4 pb-5">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between w-full">
+          <div className="flex flex-col items-center gap-6 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left w-full">
             {/* Left */}
-            <p className="flex-1 text-left text-sm leading-6 text-slate-500">
+            <p className="flex-1 text-center lg:text-left text-sm leading-6 text-slate-500">
               © 2026{" "}
               <Link
                 to="/"
@@ -160,11 +160,11 @@ const Footer = () => {
             </p>
 
             {/* Payments */}
-            <div className="flex items-center justify-center gap-4 flex-shrink-0 py-1">
+            <div className="flex flex-wrap items-center justify-center gap-3 lg:gap-4 flex-shrink-0 py-1">
               <div className="flex h-8 items-center opacity-100 transition hover:grayscale-0 whitescale">
                 <img
                   src="/payments/easypaisa.png"
-                  className="h-10 w-auto"
+                  className="h-8 sm:h-10 w-auto"
                   alt="EasyPaisa"
                 />
               </div>
@@ -195,7 +195,7 @@ const Footer = () => {
             </div>
 
             {/* Right */}
-            <p className="flex-1 whitespace-nowrap ml-10 text-left text-sm leading-6 text-slate-500 lg:text-right">
+            <p className="flex-1 text-center sm:text-left text-sm leading-6 text-slate-500 lg:text-right whitespace-normal lg:whitespace-nowrap ml-0 lg:ml-10">
               Trusted Cricket Brand Serving Pakistan And International Players.
             </p>
           </div>
