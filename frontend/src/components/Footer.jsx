@@ -8,7 +8,6 @@ import {
   FaPhone,
 } from "react-icons/fa6";
 
-
 const Footer = () => {
   return (
     <footer className="w-full bg-[#080b13] text-white">
@@ -143,10 +142,12 @@ const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="mt-16 border-t border-white/10 pt-6">
-          <div className="flex flex-col items-center justify-between gap-5 lg:flex-row">
+      </div>
+      <div className="mt-6 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-10 pt-4 pb-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between w-full">
             {/* Left */}
-            <p className="text-sm text-slate-500">
+            <p className="flex-1 text-left text-sm leading-6 text-slate-500">
               © 2026{" "}
               <Link
                 to="/"
@@ -159,35 +160,42 @@ const Footer = () => {
             </p>
 
             {/* Payments */}
-            {/* Payments */}
-            <div className="flex items-center gap-5">
-              <img
-                src="/payments/easypaisa.png"
-                alt="EasyPaisa"
-                className="h-7 w-auto object-contain transition hover:scale-105"
-              />
+            <div className="flex items-center justify-center gap-4 flex-shrink-0 py-1">
+              <div className="flex h-8 items-center opacity-100 transition hover:grayscale-0 whitescale">
+                <img
+                  src="/payments/easypaisa.png"
+                  className="h-10 w-auto"
+                  alt="EasyPaisa"
+                />
+              </div>
 
-              <img
-                src="/payments/jazzcash.png"
-                alt="JazzCash"
-                className="h-7 w-auto object-contain transition hover:scale-105"
-              />
+              <div className="flex h-8 items-center opacity-100 transition hover:grayscale-0 whitescale">
+                <img
+                  src="/payments/jazzcash.png"
+                  className="h-10 w-auto"
+                  alt="JazzCash"
+                />
+              </div>
 
-              <img
-                src="/payments/stripe.svg"
-                alt="Stripe"
-                className="h-7 w-auto object-contain transition hover:scale-105"
-              />
+              <div className="flex h-8 items-center opacity-100 transition hover:grayscale-0 whitescale">
+                <img
+                  src="/payments/visa.png"
+                  className="h-10 w-auto"
+                  alt="Visa"
+                />
+              </div>
 
-              <img
-                src="/payments/paypal.png"
-                alt="PayPal"
-                className="h-10 w-auto object-contain transition hover:scale-105"
-              />
+              <div className="flex h-8 items-center opacity-100 transition hover:grayscale-0 whitescale">
+                <img
+                  src="/payments/paypal.png"
+                  className="h-10 w-auto"
+                  alt="PayPal"
+                />
+              </div>
             </div>
 
             {/* Right */}
-            <p className="text-center text-sm text-slate-500 lg:text-right">
+            <p className="flex-1 whitespace-nowrap ml-10 text-left text-sm leading-6 text-slate-500 lg:text-right">
               Trusted Cricket Brand Serving Pakistan And International Players.
             </p>
           </div>
