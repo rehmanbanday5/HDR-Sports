@@ -90,12 +90,12 @@ const Navbar = () => {
         delivery available.
       </div>
 
-      <div className="container-HDR flex items-center justify-between gap-4 py-4">
-        <Link to="/" className="flex items-center gap-4 shrink-0 -left-5">
+      <div className="container-HDR flex items-center justify-between gap-2 lg:gap-4 py-3 lg:py-4">
+        <Link to="/" className="flex items-center shrink-0 ">
           <img
             src={HDR}
             alt="HDR Sports Logo"
-            className="h-16 w-auto object-contain translate-x-[-25px]"
+            className="h-12 sm:h-14 lg:h-16 w-auto object-contain lg:-translate-x-6"
           />
         </Link>
 
@@ -148,7 +148,7 @@ const Navbar = () => {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 shrink-0">
           <button
             aria-label="Search products"
             onClick={() => setSearchOpen((s) => !s)}
@@ -255,7 +255,7 @@ const Navbar = () => {
             )}
           </Link>
 
-          <div className="hidden sm:block">
+          <div className="hidden md:block">
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
@@ -282,18 +282,18 @@ const Navbar = () => {
         <div className="container-HDR border-t border-black/10 bg-white/90 py-4">
           <form
             onSubmit={handleSearch}
-            className="mx-auto flex max-w-3xl items-center gap-3 rounded-full border border-ink/10 bg-ink/5 px-4 py-3"
+            className="mx-auto flex w-full max-w-3xl items-center gap-2 sm:gap-3 rounded-full border border-ink/10 bg-ink/5 px-3 sm:px-4 py-3"
           >
             <Search size={18} className="text-ink/60" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search cricket bats, gloves, helmets..."
-              className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-soft"
+              className="flex-1 min-w-0 bg-transparent text-sm text-ink outline-none placeholder:text-ink-soft"
             />
             <button
               type="submit"
-              className="rounded-full bg-ink px-5 py-2 text-sm font-semibold text-chalk transition hover:bg-[#0a0a0a]"
+              className="rounded-full bg-ink px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold text-chalk transition hover:bg-[#0a0a0a]"
             >
               Search
             </button>
@@ -303,7 +303,7 @@ const Navbar = () => {
 
       {menuOpen && (
         <div className="lg:hidden border-t border-black/10 bg-white shadow-[0_20px_80px_rgba(15,23,42,0.16)]">
-          <div className="container-HDR space-y-6 py-6">
+          <div className="container-HDR space-y-5 py-5">
             <div className="grid gap-3">
               <Link
                 to="/"
@@ -328,7 +328,7 @@ const Navbar = () => {
                 <p className="text-xs uppercase tracking-[0.28em] text-ink-soft mb-3">
                   {menu.title}
                 </p>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {menu.items.map((item) => (
                     <Link
                       key={item}
