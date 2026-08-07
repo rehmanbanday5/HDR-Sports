@@ -83,7 +83,7 @@ const TRUST_POINTS = [
 
 const Section = ({ eyebrow, title, viewAllHref, children }) => (
   <section className="container-HDR py-14">
-    <div className="flex items-end justify-between mb-7">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-7">
       <div>
         {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
         <h2 className="section-heading">{title}</h2>
@@ -158,7 +158,7 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative h-[85vh] min-h-[650px] overflow-hidden text-white">
+      <section className="relative min-h-[560px] sm:min-h-[650px] lg:h-[85vh] overflow-hidden text-white">
         <Swiper
           modules={[Autoplay, EffectFade]}
           effect="fade"
@@ -181,15 +181,15 @@ const Home = () => {
         </Swiper>
 
         <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/30 via-black/10 to-black/65"></div>
-        <div className="container-HDR relative z-10 h-full grid lg:grid-cols-2 gap-12 items-center">
-          <div className="max-w-2xl">
+        <div className="container-HDR relative z-10 h-full grid gap-8 items-center py-16 sm:py-20 lg:grid-cols-2 lg:gap-12">
+          <div className="max-w-2xl text-center sm:text-left">
             <p className="eyebrow !text-[#D4AF37] mb-4">
               We’re shipping globally
             </p>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.02] mb-6">
+            <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold leading-[1.02] mb-6">
               Premium cricket gear, crafted for elite performance.
             </h1>
-            <p className="text-chalk/80 text-lg leading-relaxed mb-8 max-w-xl">
+            <p className="text-chalk/80 text-base sm:text-lg leading-relaxed mb-8 max-w-xl">
               Discover HDR Sports equipment designed for modern cricketers who
               demand quality, balance, and confidence. From bats to protective
               apparel, every product is built for performance and trusted
@@ -198,7 +198,7 @@ const Home = () => {
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-8 py-3 text-sm font-semibold text-white transition duration-300 hover:border-gold hover:text-gold"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-8 py-3 text-sm font-semibold text-white transition duration-300 hover:border-gold hover:text-gold"
               >
                 Shop Collection <ArrowRight size={18} />
               </Link>
@@ -208,8 +208,8 @@ const Home = () => {
       </section>
 
       {/* Categories */}
-      <section className="container-HDR py-20">
-        <div className="flex items-end justify-between mb-10">
+      <section className="container-HDR py-14 sm:py-20">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8 sm:mb-10">
           <div>
             <p className="eyebrow !text-[#D4AF37] mb-3">
               Most Popular Departments
@@ -227,7 +227,7 @@ const Home = () => {
           </Link>
         </div>
 
-        <div className="grid lg:grid-cols-[1.25fr_2.7fr_1.25fr] gap-6">
+        <div className="grid gap-4 md:gap-6 lg:grid-cols-[1.25fr_2.7fr_1.25fr]">
           {/* LEFT */}
           <div className="flex flex-col gap-4">
             {CATEGORY_TILES.side.slice(0, 2).map((item) => (
@@ -248,7 +248,7 @@ const Home = () => {
           {/* CENTER */}
           <Link
             to={CATEGORY_TILES.featured.link}
-            className="group relative overflow-hidden h-[570px]"
+            className="group relative overflow-hidden h-[320px] sm:h-[420px] lg:h-[570px]"
           >
             <img
               src={CATEGORY_TILES.featured.image}
@@ -263,7 +263,7 @@ const Home = () => {
                 Featured Collection
               </p>
 
-              <h2 className="text-white text-4xl font-black leading-tight mb-4">
+              <h2 className="text-white text-3xl sm:text-4xl font-black leading-tight mb-4">
                 {CATEGORY_TILES.featured.title}
               </h2>
 
@@ -300,15 +300,15 @@ const Home = () => {
       </section>
 
       {/* Brand Story */}
-      <section className="container-HDR py-20">
-        <div className="grid lg:grid-cols-[420px_1fr] gap-16 items-center">
+      <section className="container-HDR py-14 sm:py-20">
+        <div className="grid gap-10 lg:grid-cols-[420px_1fr] lg:gap-16 items-center">
           {/* Owner Image */}
           <div className="relative">
             <div className="overflow-hidden rounded-[2rem] shadow-2xl">
               <img
                 src={ownerimage}
                 alt="Founder of HDR Sports"
-                className="w-full h-[560px] object-cover"
+                className="w-full h-[320px] sm:h-[420px] lg:h-[560px] object-cover"
               />
             </div>
           </div>
@@ -317,20 +317,20 @@ const Home = () => {
           <div className="max-w-3xl">
             <p className="eyebrow !text-[#D4AF37] mb-4">Our Story</p>
 
-            <h2 className="font-display text-4xl lg:text-5xl font-black text-[#080B12] leading-tight mb-8">
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black text-[#080B12] leading-tight mb-8">
               Built For Cricketers.
               <br />
               Trusted By Players.
             </h2>
 
-            <p className="text-lg text-[#555] leading-8 mb-6">
+            <p className="text-base sm:text-lg text-[#555] leading-8 mb-6">
               HDR Sports was founded with one clear vision — to provide premium
               cricket equipment that players can trust. Every product reflects
               our commitment to quality craftsmanship, performance, and
               reliability.
             </p>
 
-            <p className="text-lg text-[#555] leading-8 mb-10">
+            <p className="text-base sm:text-lg text-[#555] leading-8 mb-10">
               From passionate beginners to professional athletes, we believe
               every cricketer deserves equipment that inspires confidence every
               time they step onto the field.
@@ -359,7 +359,7 @@ const Home = () => {
             <button
               key={tab.slug}
               onClick={() => setActiveTab(tab.slug)}
-              className={`px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300
+              className={`px-4 py-2.5 sm:px-6 sm:py-3 rounded-full text-sm font-semibold transition-all duration-300
           ${
             activeTab === tab.slug
               ? "bg-[#080B12] text-white"
@@ -374,7 +374,7 @@ const Home = () => {
         {categoryProducts.length === 0 ? (
           <ProductGridSkeleton count={8} />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {categoryProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
@@ -402,7 +402,7 @@ const Home = () => {
         ) : newArrivals.length === 0 ? (
           <p className="text-ink-soft text-sm">No new arrivals yet.</p>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {newArrivals.map((p) => (
               <ProductCard key={p._id} product={p} />
             ))}
@@ -424,8 +424,8 @@ const Home = () => {
         </p>
       </div>
 
-      <section className="container-HDR py-20">
-        <div className="flex items-center justify-center gap-8 md:gap-10 flex-wrap mb-10">
+      <section className="container-HDR py-12 sm:py-20">
+        <div className="flex items-center justify-center gap-4 sm:gap-8 md:gap-10 flex-wrap mb-10">
           {/* Logo */}
           <div className="w-16 h-16 rounded-full border overflow-hidden bg-white flex items-center justify-center">
             <img
@@ -470,13 +470,15 @@ const Home = () => {
               href={post.instagramUrl}
               target="_blank"
               rel="noreferrer"
-              className="group mx-6 block"
+              className="group mx-3 sm:mx-6 block"
             >
               <div
                 className="
       relative
-      w-[270px]
-      h-[330px]
+      w-[220px]
+      h-[280px]
+      sm:w-[270px]
+      sm:h-[330px]
       rounded-[24px]
       overflow-hidden
       bg-white
@@ -584,7 +586,7 @@ const Home = () => {
 
       {/* Our Promise */}
       <section className="bg-[#080B12] text-white">
-        <div className="container-HDR py-16">
+        <div className="container-HDR py-14 sm:py-16">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <p className="eyebrow !text-[#D4AF37] mb-3">Our Promise</p>
 
@@ -599,7 +601,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="border border-white/10 rounded-[1.8rem] p-7 transition hover:border-[#D4AF37]">
               <h3 className="font-bold text-lg mb-2">Premium Materials</h3>
 
@@ -640,7 +642,7 @@ const Home = () => {
       </section>
 
       {/* Visit Our Store */}
-      <section className="container-HDR pb-20">
+      <section className="container-HDR pb-14 sm:pb-20">
         <div className="text-center max-w-2xl mx-auto mb-8">
           <p className="eyebrow !text-[#D4AF37] mt-8">Visit Our Store</p>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#080B12] mt-8">
@@ -662,7 +664,7 @@ const Home = () => {
             <img
               src={StoreLocation}
               alt="HDR Sports Store Location"
-              className="block w-full h-[350px] sm:h-[450px] object-cover transition-transform duration-500 group-hover:scale-110"
+              className="block w-full h-[280px] sm:h-[350px] lg:h-[450px] object-cover transition-transform duration-500 group-hover:scale-110"
             />
           </a>
         </div>
