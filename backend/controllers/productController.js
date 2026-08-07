@@ -1,12 +1,17 @@
-const asyncHandler = require('express-async-handler');
-const Product = require('../models/Product');
+const asyncHandler = require("express-async-handler");
+const connectDB = require("../config/db");
+const Product = require("../models/Product");
 const Category = require("../models/Category");
-const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} = require("../config/cloudinary");
 
 // @desc    Browse/search/filter/sort products
 // @route   GET /api/products
 // query params: search, category, minPrice, maxPrice, sort, page, limit, featured, newArrival, bestSeller, inStock
 exports.getProducts = asyncHandler(async (req, res) => {
+  await connectDB();
   const Category = require("../models/Category");
 
   const {
@@ -27,21 +32,22 @@ exports.getProducts = asyncHandler(async (req, res) => {
   const filter = { isActive: true };
 
   if (search) filter.$text = { $search: search };
-if (category) {
-  filter.category = category;
-}
-
-if (categorySlug) {
-  const cat = await Category.findOne({ slug: categorySlug });
-
-  if (cat) {
-    filter.category = cat._id;
-  } else {
-    filter.category = null;
+  if (category) {
+    filter.category = category;
   }
-}  if (featured === 'true') filter.isFeatured = true;
-  if (newArrival === 'true') filter.isNewArrival = true;
-  if (bestSeller === 'true') filter.isBestSeller = true;
+
+  if (categorySlug) {
+    const cat = await Category.findOne({ slug: categorySlug });
+
+    if (cat) {
+      filter.category = cat._id;
+    } else {
+      filter.category = null;
+    }
+  }
+  if (featured === "true") filter.isFeatured = true;
+  if (newArrival === "true") filter.isNewArrival = true;
+  if (bestSeller === "true") filter.isBestSeller = true;
 
   if (minPrice || maxPrice) {
     filter.basePrice = {};
@@ -49,11 +55,11 @@ if (categorySlug) {
     if (maxPrice) filter.basePrice.$lte = Number(maxPrice);
   }
 
-  if (inStock === 'true') filter.stock = { $gt: 0 };
+  if (inStock === "true") filter.stock = { $gt: 0 };
 
   const sortMap = {
-    'price-asc': { basePrice: 1 },
-    'price-desc': { basePrice: -1 },
+    "price-asc": { basePrice: 1 },
+    "price-desc": { basePrice: -1 },
     newest: { createdAt: -1 },
     rating: { ratingAverage: -1 },
     popular: { salesCount: -1 },
@@ -66,7 +72,7 @@ if (categorySlug) {
 
   const [products, total] = await Promise.all([
     Product.find(filter)
-      .populate('category', 'name slug')
+      .populate("category", "name slug")
       .sort(sortOption)
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum),
@@ -86,13 +92,20 @@ if (categorySlug) {
 // @desc    Get single product by slug
 // @route   GET /api/products/:slug
 exports.getProductBySlug = asyncHandler(async (req, res) => {
-  const product = await Product.findOne({ slug: req.params.slug, isActive: true })
-    .populate('category', 'name slug')
-    .populate('relatedProducts', 'name slug images basePrice baseSalePrice ratingAverage');
+  await connectDB();
+  const product = await Product.findOne({
+    slug: req.params.slug,
+    isActive: true,
+  })
+    .populate("category", "name slug")
+    .populate(
+      "relatedProducts",
+      "name slug images basePrice baseSalePrice ratingAverage",
+    );
 
   if (!product) {
     res.status(404);
-    throw new Error('Product not found');
+    throw new Error("Product not found");
   }
 
   product.viewCount += 1;
@@ -101,8 +114,12 @@ exports.getProductBySlug = asyncHandler(async (req, res) => {
   // Fallback related products: same category, excluding self
   let related = product.relatedProducts;
   if (!related || related.length === 0) {
-    related = await Product.find({ category: product.category._id, _id: { $ne: product._id }, isActive: true })
-      .select('name slug images basePrice baseSalePrice ratingAverage')
+    related = await Product.find({
+      category: product.category._id,
+      _id: { $ne: product._id },
+      isActive: true,
+    })
+      .select("name slug images basePrice baseSalePrice ratingAverage")
       .limit(4);
   }
 
@@ -112,24 +129,32 @@ exports.getProductBySlug = asyncHandler(async (req, res) => {
 // @desc    Add product review
 // @route   POST /api/products/:id/reviews
 exports.addReview = asyncHandler(async (req, res) => {
+  await connectDB();
   const { rating, comment } = req.body;
   const product = await Product.findById(req.params.id);
   if (!product) {
     res.status(404);
-    throw new Error('Product not found');
+    throw new Error("Product not found");
   }
 
-  const alreadyReviewed = product.reviews.find((r) => r.user.toString() === req.user.id);
+  const alreadyReviewed = product.reviews.find(
+    (r) => r.user.toString() === req.user.id,
+  );
   if (alreadyReviewed) {
     res.status(400);
-    throw new Error('You have already reviewed this product');
+    throw new Error("You have already reviewed this product");
   }
 
-  product.reviews.push({ user: req.user.id, name: req.user.name, rating: Number(rating), comment });
+  product.reviews.push({
+    user: req.user.id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  });
   product.recalculateRating();
   await product.save();
 
-  res.status(201).json({ success: true, message: 'Review added' });
+  res.status(201).json({ success: true, message: "Review added" });
 });
 
 // ---------- Admin ----------
@@ -137,19 +162,31 @@ exports.addReview = asyncHandler(async (req, res) => {
 // @desc    Create product (admin)
 // @route   POST /api/products
 exports.createProduct = asyncHandler(async (req, res) => {
+  await connectDB();
   const body = { ...req.body };
 
-  if (typeof body.variants === 'string') body.variants = JSON.parse(body.variants);
-  if (typeof body.specifications === 'string') body.specifications = JSON.parse(body.specifications);
-  if (typeof body.tags === 'string') body.tags = body.tags.split(',').map((t) => t.trim());
+  if (typeof body.variants === "string")
+    body.variants = JSON.parse(body.variants);
+  if (typeof body.specifications === "string")
+    body.specifications = JSON.parse(body.specifications);
+  if (typeof body.tags === "string")
+    body.tags = body.tags.split(",").map((t) => t.trim());
 
   const product = new Product(body);
 
   if (req.files?.length) {
     const uploads = await Promise.all(
-      req.files.map((f) => uploadToCloudinary(`data:${f.mimetype};base64,${f.buffer.toString('base64')}`))
+      req.files.map((f) =>
+        uploadToCloudinary(
+          `data:${f.mimetype};base64,${f.buffer.toString("base64")}`,
+        ),
+      ),
     );
-    product.images = uploads.map((r, idx) => ({ url: r.secure_url, publicId: r.public_id, isPrimary: idx === 0 }));
+    product.images = uploads.map((r, idx) => ({
+      url: r.secure_url,
+      publicId: r.public_id,
+      isPrimary: idx === 0,
+    }));
   }
 
   await product.save();
@@ -159,24 +196,36 @@ exports.createProduct = asyncHandler(async (req, res) => {
 // @desc    Update product (admin)
 // @route   PUT /api/products/:id
 exports.updateProduct = asyncHandler(async (req, res) => {
+  await connectDB();
   const product = await Product.findById(req.params.id);
   if (!product) {
     res.status(404);
-    throw new Error('Product not found');
+    throw new Error("Product not found");
   }
 
   const body = { ...req.body };
-  if (typeof body.variants === 'string') body.variants = JSON.parse(body.variants);
-  if (typeof body.specifications === 'string') body.specifications = JSON.parse(body.specifications);
-  if (typeof body.tags === 'string') body.tags = body.tags.split(',').map((t) => t.trim());
+  if (typeof body.variants === "string")
+    body.variants = JSON.parse(body.variants);
+  if (typeof body.specifications === "string")
+    body.specifications = JSON.parse(body.specifications);
+  if (typeof body.tags === "string")
+    body.tags = body.tags.split(",").map((t) => t.trim());
 
   Object.assign(product, body);
 
   if (req.files?.length) {
     const uploads = await Promise.all(
-      req.files.map((f) => uploadToCloudinary(`data:${f.mimetype};base64,${f.buffer.toString('base64')}`))
+      req.files.map((f) =>
+        uploadToCloudinary(
+          `data:${f.mimetype};base64,${f.buffer.toString("base64")}`,
+        ),
+      ),
     );
-    const newImages = uploads.map((r) => ({ url: r.secure_url, publicId: r.public_id, isPrimary: false }));
+    const newImages = uploads.map((r) => ({
+      url: r.secure_url,
+      publicId: r.public_id,
+      isPrimary: false,
+    }));
     product.images = [...product.images, ...newImages];
   }
 
@@ -187,15 +236,16 @@ exports.updateProduct = asyncHandler(async (req, res) => {
 // @desc    Delete a single product image (admin)
 // @route   DELETE /api/products/:id/images/:imageId
 exports.deleteProductImage = asyncHandler(async (req, res) => {
+  await connectDB();
   const product = await Product.findById(req.params.id);
   if (!product) {
     res.status(404);
-    throw new Error('Product not found');
+    throw new Error("Product not found");
   }
   const image = product.images.id(req.params.imageId);
   if (!image) {
     res.status(404);
-    throw new Error('Image not found');
+    throw new Error("Image not found");
   }
   if (image.publicId) await deleteFromCloudinary(image.publicId);
   product.images.pull(req.params.imageId);
@@ -206,19 +256,25 @@ exports.deleteProductImage = asyncHandler(async (req, res) => {
 // @desc    Delete product (admin)
 // @route   DELETE /api/products/:id
 exports.deleteProduct = asyncHandler(async (req, res) => {
+  await connectDB();
   const product = await Product.findById(req.params.id);
   if (!product) {
     res.status(404);
-    throw new Error('Product not found');
+    throw new Error("Product not found");
   }
-  await Promise.all(product.images.filter((i) => i.publicId).map((i) => deleteFromCloudinary(i.publicId)));
+  await Promise.all(
+    product.images
+      .filter((i) => i.publicId)
+      .map((i) => deleteFromCloudinary(i.publicId)),
+  );
   await product.deleteOne();
-  res.status(200).json({ success: true, message: 'Product deleted' });
+  res.status(200).json({ success: true, message: "Product deleted" });
 });
 
 // @desc    Get all products for admin (includes inactive, no pagination limit cap)
 // @route   GET /api/products/admin/all
 exports.getAdminProducts = asyncHandler(async (req, res) => {
+  await connectDB();
   const { search, page = 1, limit = 20 } = req.query;
   const filter = {};
   if (search) filter.$text = { $search: search };
@@ -228,26 +284,36 @@ exports.getAdminProducts = asyncHandler(async (req, res) => {
 
   const [products, total] = await Promise.all([
     Product.find(filter)
-      .populate('category', 'name')
-      .sort('-createdAt')
+      .populate("category", "name")
+      .sort("-createdAt")
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum),
     Product.countDocuments(filter),
   ]);
 
-  res.status(200).json({ success: true, count: products.length, total, page: pageNum, pages: Math.ceil(total / limitNum), products });
+  res
+    .status(200)
+    .json({
+      success: true,
+      count: products.length,
+      total,
+      page: pageNum,
+      pages: Math.ceil(total / limitNum),
+      products,
+    });
 });
 
 // @desc    Low stock products (admin)
 // @route   GET /api/products/admin/low-stock
 exports.getLowStockProducts = asyncHandler(async (req, res) => {
+  await connectDB();
   const threshold = parseInt(req.query.threshold) || 5;
   const products = await Product.find({
     isActive: true,
     $or: [
       { hasVariants: false, stock: { $lte: threshold } },
-      { hasVariants: true, 'variants.stock': { $lte: threshold } },
+      { hasVariants: true, "variants.stock": { $lte: threshold } },
     ],
-  }).select('name slug stock variants images');
+  }).select("name slug stock variants images");
   res.status(200).json({ success: true, count: products.length, products });
 });

@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const connectDB = require("../config/db");
 const InstagramPost = require("../models/instagramPost");
 const {
   uploadToCloudinary,
@@ -11,6 +12,7 @@ const {
 // ==============================
 
 exports.getInstagramPosts = asyncHandler(async (req, res) => {
+  await connectDB();
   const posts = await InstagramPost.find({ isActive: true }).sort(
     "displayOrder createdAt",
   );
@@ -28,6 +30,7 @@ exports.getInstagramPosts = asyncHandler(async (req, res) => {
 // ==============================
 
 exports.createInstagramPost = asyncHandler(async (req, res) => {
+  await connectDB();
   const { title, instagramUrl, displayOrder } = req.body;
 
   const post = new InstagramPost({
@@ -63,6 +66,7 @@ exports.createInstagramPost = asyncHandler(async (req, res) => {
 // ==============================
 
 exports.updateInstagramPost = asyncHandler(async (req, res) => {
+  await connectDB();
   const post = await InstagramPost.findById(req.params.id);
 
   if (!post) {
@@ -103,6 +107,7 @@ exports.updateInstagramPost = asyncHandler(async (req, res) => {
 // ==============================
 
 exports.deleteInstagramPost = asyncHandler(async (req, res) => {
+  await connectDB();
   const post = await InstagramPost.findById(req.params.id);
 
   if (!post) {

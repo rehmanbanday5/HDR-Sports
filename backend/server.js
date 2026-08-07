@@ -17,6 +17,8 @@ connectDB().catch((err) => {
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 // Security & parsing middleware
 app.use(helmet());
 app.use(
@@ -40,6 +42,19 @@ app.use(xss());
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
+
+app.use(async (req, res, next) => {
+  if (req.path === "/" || req.path === "/api" || req.path === "/api/health") {
+    return next();
+  }
+
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 const limiter = rateLimit({
   windowMs: (parseInt(process.env.RATE_LIMIT_WINDOW_MINUTES) || 15) * 60 * 1000,

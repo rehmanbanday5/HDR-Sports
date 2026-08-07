@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 let cached = global.mongoose;
 
@@ -14,21 +14,30 @@ const connectDB = async () => {
   const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
   if (!mongoUri) {
-    console.warn('[db] No MongoDB URI found. Skipping connection for this environment.');
-    return null;
+    const err = new Error(
+      "No MongoDB URI found. Please set MONGO_URI or MONGODB_URI.",
+    );
+    console.warn(
+      "[db] No MongoDB URI found. Skipping connection for this environment.",
+    );
+    throw err;
   }
 
   if (!cached.promise) {
     const opts = {
-      serverSelectionTimeoutMS: 15000,
-      socketTimeoutMS: 45000,
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 60000,
       maxPoolSize: 5,
       family: 4,
+      bufferCommands: true,
     };
 
-    cached.promise = mongoose.connect(mongoUri, opts)
+    cached.promise = mongoose
+      .connect(mongoUri, opts)
       .then((conn) => {
-        console.log(`[db] MongoDB connected: ${conn.connection.host}/${conn.connection.name}`);
+        console.log(
+          `[db] MongoDB connected: ${conn.connection.host}/${conn.connection.name}`,
+        );
         cached.conn = conn;
         return conn;
       })
